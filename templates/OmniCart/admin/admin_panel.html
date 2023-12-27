@@ -1,0 +1,22 @@
+<!-- OmniCart/admin_panel.html -->
+{% extends 'OmniCart/admin_panel_layout.html' %}
+
+{% block title %}Manufacturer Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <h2 class="mb-4">Manufacturer Admin Panel</h2>
+    <p>Welcome, {{ customer.username }}!</p>
+
+    <!-- Logout Button with Icon -->
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">
+            <i class="bi bi-box-arrow-right"></i> Logout
+        </button>
+    </form>
+
+    <!-- Additional Content -->
+    <!-- Add your additional content here -->
+</div>
+{% endblock %}
