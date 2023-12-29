@@ -35,6 +35,7 @@ class Customer(AbstractBaseUser):
     address = models.TextField(blank=True, null=True)
     phone_number = models.CharField(max_length=20, blank=True, null=True)
     registration_date = models.DateTimeField(auto_now_add=True)
+    login_status = models.BooleanField(default=False)
 
     objects = CustomUserManager()
 
@@ -57,3 +58,24 @@ class Customer(AbstractBaseUser):
             return Customer.objects.get(username=username)
         except Customer.DoesNotExist:
             return None
+
+
+# For Products
+class Product(models.Model):
+    product_id = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True
+    )
+    product_name = models.CharField(max_length=255)
+    manufacturer_id = models.ForeignKey(
+        Customer, on_delete=models.CASCADE, related_name="products"
+    )
+    quantity = models.PositiveIntegerField()
+    product_image = models.ImageField(
+        upload_to="product_images/", null=True, blank=True
+    )
+    unit_weight = models.FloatField()
+    product_description = models.TextField()
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return self.product_name

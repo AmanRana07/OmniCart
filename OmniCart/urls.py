@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from OmniApp.views import *
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -26,4 +28,10 @@ urlpatterns = [
     path("login/", CustomLoginView.as_view(), name="login"),
     path("logout/", LogoutView.as_view(), name="logout"),
     path("adminpanel/<uuid:customer_id>", AdminPanelView.as_view(), name="admin_panel"),
+    path("add_product/", add_product, name="add_product"),
+    path("product-list/", product_list, name="product_list"),
+    path("product/edit/<uuid:product_id>/", product_edit, name="product_edit"),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

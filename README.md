@@ -1,2 +1,0 @@
-# OmniCart
-The Ecommerce website
