@@ -6,19 +6,12 @@
         <!-- duplicate or remove this li tag if you want to add or remove navlink with submenu -->
         <!-- start -->
         <li class="item">
-          <div href="#" class="nav_link submenu_item">
+          <a href="{% url 'admin_panel' customer_id=request.session.customer.id %}" class="nav_link">
             <span class="navlink_icon">
-              <i class="bx bx-home-alt"></i>
+              <i class='bx bxs-dashboard'></i>
             </span>
-            <span class="navlink">Figures</span>
-            <i class="bx bx-chevron-right arrow-left"></i>
-          </div>
-          <ul class="menu_items submenu">
-            <a href="#" class="nav_link sublink">Total Products</a>
-            <a href="#" class="nav_link sublink">total Orders</a>
-            <a href="#" class="nav_link sublink">Pending Order</a>
-            <a href="#" class="nav_link sublink">Nav Sub Link</a>
-          </ul>
+            <span class="navlink">Dashboard</span>
+          </a>
         </li>
        
         <!-- end -->

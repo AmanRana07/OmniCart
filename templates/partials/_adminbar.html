@@ -11,6 +11,11 @@
       <i class="bi bi-grid"></i>
       <i class='bx bx-sun' id="darkLight"></i>
       <i class='bx bx-bell' ></i>
-      <i class='bx bx-user-circle' ></i>
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">
+            <i class="bi bi-box-arrow-right"></i> Logout
+        </button>
+    </form>
     </div>
   </nav>

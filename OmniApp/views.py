@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, HttpResponseRedirect, get_object_
 from django.contrib.auth import authenticate, login
 from django.views import View
 from .forms import *
-from django.db.models import Q
+from django.db.models import Q, Count
 from .models import Customer
 from django.contrib.auth.hashers import check_password
 from django.urls import reverse
@@ -13,11 +13,11 @@ from django.contrib import messages
 
 
 def index(request):
-    # Get the customer ID from the session
+    # Get the customer session from the session
     customer_session = request.session.get("customer")
-    customer_id = customer_session.get("id")
 
-    if customer_id:
+    if customer_session:
+        customer_id = customer_session.get("id")
         try:
             # Try to fetch the customer if the ID is available
             customer = Customer.objects.get(id=customer_id)
@@ -25,13 +25,15 @@ def index(request):
         except Customer.DoesNotExist:
             # Handle the case where the customer does not exist
             user_authenticated = False
+            customer = None
     else:
-        # Customer ID is not available, user is not authenticated
+        # Customer session is not available, user is not authenticated
         user_authenticated = False
+        customer = None
 
     context = {
         "user_authenticated": user_authenticated,
-        "type": customer.user_type,
+        "type": customer.user_type if customer else None,
     }
 
     return render(request, "OmniCart/index.html", context)
@@ -140,6 +142,19 @@ class AdminPanelView(View):
     def get(self, request, customer_id):
         try:
             customer = Customer.objects.get(id=customer_id, user_type="manufacturer")
+
+            # Get the total number of products and customers
+            total_products = Product.objects.filter(manufacturer_id=customer).count()
+
+            return render(
+                request,
+                self.template_name,
+                {
+                    "customer": customer,
+                    "total_products": total_products,
+                    # "total_customers": total_customers,
+                },
+            )
         except Customer.DoesNotExist:
             # Handle the case where the customer or user type does not exist
             return render(
@@ -148,28 +163,29 @@ class AdminPanelView(View):
                 {"error_message": "Invalid customer ID or user type."},
             )
 
-        return render(request, self.template_name, {"customer": customer})
-
 
 def add_product(request):
     if request.method == "POST":
         form = ProductForm(request.POST, request.FILES)
         customer_session = request.session.get("customer")
-        if form.is_valid():
-            product = form.save(commit=False)
+        if customer_session:
+            if form.is_valid():
+                product = form.save(commit=False)
 
-            # Retrieve the logged-in customer (manufacturer)
-            customer_id = customer_session.get("id")
-            customer = Customer.objects.get(id=customer_id, user_type="manufacturer")
+                # Retrieve the logged-in customer (manufacturer)
+                customer_id = customer_session.get("id")
+                customer = Customer.objects.get(
+                    id=customer_id, user_type="manufacturer"
+                )
 
-            # Set the manufacturer to the currently logged-in user
-            product.manufacturer_id = customer
-            product.save()
+                # Set the manufacturer to the currently logged-in user
+                product.manufacturer_id = customer
+                product.save()
 
-            messages.success(request, "Product added successfully!")
-            return redirect("add_product")
-        else:
-            error_message = "There was an error. Please check the form."
+                messages.success(request, "Product added successfully!")
+                return redirect("add_product")
+            else:
+                error_message = "There was an error. Please check the form."
     else:
         form = ProductForm()
         error_message = None
@@ -206,22 +222,28 @@ def product_list(request):
 
 
 def product_edit(request, product_id):
+    customer_session = request.session.get("customer")
     # Retrieve the product object
     product = get_object_or_404(Product, product_id=product_id)
-
-    if request.method == "POST":
-        # Populate the form with the submitted data and instance
-        form = ProductEditrm(request.POST, request.FILES, instance=product)
-        if form.is_valid():
-            # Save the updated data
-            form.save()
-            return redirect(
-                "product_list"
-            )  # Redirect to the product list page after successful update
+    if customer_session:
+        if request.method == "POST":
+            # Populate the form with the submitted data and instance
+            form = ProductEditrm(request.POST, request.FILES, instance=product)
+            if form.is_valid():
+                # Save the updated data
+                form.save()
+                return redirect(
+                    "product_list"
+                )  # Redirect to the product list page after successful update
+        else:
+            # Populate the form with the current product data
+            form = ProductEditrm(instance=product)
+        return render(
+            request,
+            "OmniCart/admin/product_edit.html",
+            {"form": form, "product": product},
+        )
     else:
-        # Populate the form with the current product data
-        form = ProductEditrm(instance=product)
-
-    return render(
-        request, "OmniCart/admin/product_edit.html", {"form": form, "product": product}
-    )
+        # Handle the case where the customer is not logged in
+        messages.error(request, "Please log in as a manufacturer.")
+        return redirect("login")

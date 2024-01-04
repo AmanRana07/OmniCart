@@ -4,17 +4,23 @@
 {% block title %}Manufacturer Admin Panel{% endblock %}
 
 {% block content %}
-<div class="container mt-5 mb-5">
+<div class="container">
     <h2 class="mb-4">Manufacturer Admin Panel</h2>
     <p>Welcome, {{ customer.username }}!</p>
 
     <!-- Logout Button with Icon -->
-    <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger">
-            <i class="bi bi-box-arrow-right"></i> Logout
-        </button>
-    </form>
+    <!-- Display Total Products and Customers -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Products</h5>
+                    <p class="card-text">{{ total_products }}</p>
+                </div>
+            </div>
+        </div>
+       
+    </div>
 
     <!-- Additional Content -->
     <!-- Add your additional content here -->
