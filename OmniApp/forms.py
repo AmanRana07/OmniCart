@@ -54,6 +54,7 @@ class ProductForm(forms.ModelForm):
             "product_image",
             "unit_weight",
             "product_description",
+            "product_short_description",
             "unit_price",
         ]
         widgets = {
@@ -62,6 +63,9 @@ class ProductForm(forms.ModelForm):
             "product_image": forms.ClearableFileInput(attrs={"class": "form-control"}),
             "unit_weight": forms.NumberInput(attrs={"class": "form-control"}),
             "product_description": forms.Textarea(attrs={"class": "form-control"}),
+            "product_short_description": forms.Textarea(
+                attrs={"class": "form-control", "required": False}
+            ),
             "unit_price": forms.NumberInput(attrs={"class": "form-control"}),
         }
 
@@ -75,6 +79,7 @@ class ProductEditrm(forms.ModelForm):
             "product_image",
             "unit_weight",
             "product_description",
+            "product_short_description",
             "unit_price",
         ]
         widgets = {
@@ -91,6 +96,9 @@ class ProductEditrm(forms.ModelForm):
                 attrs={"class": "form-control", "required": False}
             ),
             "product_description": forms.Textarea(
+                attrs={"class": "form-control", "required": False}
+            ),
+            "product_short_description": forms.Textarea(
                 attrs={"class": "form-control", "required": False}
             ),
             "unit_price": forms.NumberInput(

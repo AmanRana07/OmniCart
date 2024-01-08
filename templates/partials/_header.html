@@ -205,10 +205,10 @@
                             <div class="navbar-collapse">	
                                 <div class="nav-inner">	
                                     <ul class="nav main-menu menu navbar-nav">
-                                            <li class="active"><a href="#">Home</a></li>
-                                            <li><a href="#">Product</a></li>												
+                                        <li  class="{% if current_page_url == '/' %}active{% endif %}"><a href="{% url 'index' %}">Home</a></li>
+                                            <li  class="{% if current_page_url == '/shops/' %}active{% endif %}"><a href="{% url 'shops' %}">Product</a></li>												
                                             <li><a href="#">Service</a></li>
-                                            <li><a href="#">Shop<i class="ti-angle-down"></i><span class="new">New</span></a>
+                                            <li class="" ><a href="#">Shop<i class="ti-angle-down"></i><span class="new">New</span></a>
                                                 <ul class="dropdown">
                                                     <li><a href="cart.html">Cart</a></li>
                                                     <li><a href="checkout.html">Checkout</a></li>

@@ -10,10 +10,11 @@ from django.contrib.auth.hashers import check_password
 from django.urls import reverse
 import re
 from django.contrib import messages
+from django.http import JsonResponse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
-def index(request):
-    # Get the customer session from the session
+def authentication_login(request):
     customer_session = request.session.get("customer")
 
     if customer_session:
@@ -30,10 +31,18 @@ def index(request):
         # Customer session is not available, user is not authenticated
         user_authenticated = False
         customer = None
+    types = customer.user_type if customer else None
+    return user_authenticated, types
+
+
+def index(request):
+    # Get the customer session from the session
+    user_authenticated, types = authentication_login(request)
 
     context = {
         "user_authenticated": user_authenticated,
-        "type": customer.user_type if customer else None,
+        "type": types,
+        "current_page_url": request.path,
     }
 
     return render(request, "OmniCart/index.html", context)
@@ -46,6 +55,7 @@ def cart_view(request):
 
     context = {
         "user_authenticated": user_authenticated,
+        "current_page_url": request.path,
     }
     return render(request, "OmniCart/cart.html", context)
 
@@ -247,3 +257,88 @@ def product_edit(request, product_id):
         # Handle the case where the customer is not logged in
         messages.error(request, "Please log in as a manufacturer.")
         return redirect("login")
+
+
+def product_delete(request, product_id):
+    customer_session = request.session.get("customer")
+
+    product = get_object_or_404(Product, product_id=product_id)
+
+    # Check if the request method is POST
+    if request.method == "POST":
+        # Delete the product
+        product.delete()
+
+        # Return a JSON response indicating success
+        return JsonResponse({"message": "Product deleted successfully."})
+
+    # Return a JSON response indicating an error (this should not happen in a valid scenario)
+    return JsonResponse({"error": "Invalid request method."}, status=400)
+
+
+def shop(request):
+    # Assuming you have a queryset for products and categories
+    products = Product.objects.all()
+    # categories = Category.objects.all()
+    customer_id = request.session.get("customer")
+    # Check if the customer is authenticated
+    user_authenticated = customer_id is not None
+    # Pagination
+    page = request.GET.get("page", 1)
+    paginator = Paginator(products, 9)  # Show 9 products per page
+    try:
+        product_pages = paginator.page(page)
+    except PageNotAnInteger:
+        product_pages = paginator.page(1)
+    except EmptyPage:
+        product_pages = paginator.page(paginator.num_pages)
+
+    context = {
+        "products": product_pages,
+        # 'categories': categories,
+        "user_authenticated": user_authenticated,
+        "current_page": int(page),
+        "product_pages": range(1, product_pages.paginator.num_pages + 1),
+    }
+
+    return render(request, "OmniCart/product/shop.html", context)
+
+
+def shops(request):
+    # Assuming you have a queryset for products and categories
+    products = Product.objects.all()
+    user_authenticated, types = authentication_login(request)
+    # categories = Category.objects.all()
+
+    # Pagination
+    page = request.GET.get("page", 1)
+    paginator = Paginator(products, 9)  # Show 9 products per page
+    try:
+        product_pages = paginator.page(page)
+    except PageNotAnInteger:
+        product_pages = paginator.page(1)
+    except EmptyPage:
+        product_pages = paginator.page(paginator.num_pages)
+
+    context = {
+        "products": product_pages,
+        # 'categories': categories,
+        "user_authenticated": user_authenticated,
+        "type": types,
+        "current_page": int(page),
+        "product_pages": range(1, product_pages.paginator.num_pages + 1),
+        "current_page_url": request.path,
+    }
+
+    return render(request, "OmniCart/product/shops.html", context)
+
+
+def product_detail(request, product_id):
+    # Retrieve the product details based on the product_id
+    product = get_object_or_404(Product, product_id=product_id)
+
+    context = {
+        "product": product,
+    }
+
+    return render(request, "OmniCart/product/product_detail.html", context)

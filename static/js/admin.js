@@ -54,3 +54,37 @@ if (window.innerWidth < 768) {
 } else {
   sidebar.classList.remove("close");
 }
+
+// Product Delete
+function product_delete() {
+  $(".delete-product").on("click", function(e) {
+    e.preventDefault();
+
+    // Get the product ID from the data attribute
+    var productId = $(this).data("product-id");
+    var token = $(this).attr('token');
+    // Confirm deletion
+    if (confirm("Are you sure you want to delete this product?")) {
+      // Send AJAX request to delete the product
+      $.ajax({
+        url: "/product/delete/" + productId + "/",  // Replace with your actual URL
+        method: "POST",
+        data: {
+          csrfmiddlewaretoken: token,
+          // Other data you may want to send
+        },
+        success: function(response) {
+          // Handle success, e.g., remove the deleted product from the table
+          alert("Product deleted successfully!");
+          location.reload();  // Reload the page or update the table
+        },
+        error: function(error) {
+          alert("Error deleting product. Please try again.");
+        }
+      });
+    }
+  });
+};
+setTimeout(function(){
+  product_delete()
+},1000);

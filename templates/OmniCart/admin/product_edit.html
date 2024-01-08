@@ -39,6 +39,10 @@
         <label for="id_product_description" class="form-label">Product Description:</label>
         <textarea name="product_description" id="id_product_description" class="form-control" rows="4">{{ product.product_description }}</textarea>
     </div>
+    <div class="mb-3">
+      <label for="id_product_short_description" class="form-label">Product Short Description:</label>
+      <textarea name="product_short_description" id="id_product_short_description"  class="form-control" rows="2">{{ product.product_short_description }}</textarea>
+  </div>
 
       <button type="submit" class="btn btn-primary">Update Product</button>
     </form>

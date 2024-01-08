@@ -3,7 +3,7 @@
 {% block title %}Product List{% endblock %}
 
 {% block content %}
-  <div class="container">
+  <div class="container" >
     <h2 class="mt-4 mb-4">Product List</h2>
 
     {% if products %}
@@ -26,9 +26,10 @@
               <td>{{ product.quantity }}</td>
               <td>
                 <a href="{% url 'product_edit' product_id=product.product_id %}"><i class='bx bx-edit-alt' ></i></a>
-                <a href=""><i class="bx bx-trash"></i></a>
+                <!-- this is a delete  -->
+                <a href="" token="{{ csrf_token }}" class="delete-product" data-product-id="{{ product.product_id }}"><i class="bx bx-trash"></i></a>
                 {% if product.disabled %}
-                  <i class="bx bx-x"></i>
+                  <i class="bx bx-x"></i> 
                 {% else %}
                   <i class="bx bx-check"></i>
                 {% endif %}
@@ -41,6 +42,7 @@
       <p>No products available.</p>
     {% endif %}
   </div>
+
 {% endblock %}
 
 

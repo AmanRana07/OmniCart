@@ -31,6 +31,10 @@ urlpatterns = [
     path("add_product/", add_product, name="add_product"),
     path("product-list/", product_list, name="product_list"),
     path("product/edit/<uuid:product_id>/", product_edit, name="product_edit"),
+    path("product/delete/<uuid:product_id>/", product_delete, name="product_delete"),
+    path("shop/", shop, name="shop"),
+    path("shops/", shops, name="shops"),
+    path("product/<uuid:product_id>/", product_detail, name="product_detail"),
 ]
 
 if settings.DEBUG:
