@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 import uuid
+from django.contrib.auth.models import User
 
 
 class CustomUserManager(BaseUserManager):
@@ -39,7 +40,7 @@ class Customer(AbstractBaseUser):
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = "email"
+    USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ["username"]
 
     # def __str__(self):
@@ -79,3 +80,38 @@ class Product(models.Model):
 
     def __str__(self):
         return self.product_name
+
+
+# Add to Cart Functionality
+
+
+class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default="23223")
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    total_quantity = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.user.username}'s Cart"
+
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, related_name="items", on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def save(self, *args, **kwargs):
+        # Update the cart's total price and total quantity when saving a CartItem
+        self.cart.total_price += self.product.unit_price * self.quantity
+        self.cart.total_quantity += self.quantity
+        self.cart.save()
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        # Update the cart's total price and total quantity when deleting a CartItem
+        self.cart.total_price -= self.product.unit_price * self.quantity
+        self.cart.total_quantity -= self.quantity
+        self.cart.save()
+        super().delete(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.product.product_name} in {self.cart.user.username}'s Cart"

@@ -23,7 +23,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", index, name="index"),
-    path("cart/", cart_view, name="cart"),
+    path("cart/", view_cart, name="cart"),
     path("register/", RegistrationView.as_view(), name="register"),
     path("login/", CustomLoginView.as_view(), name="login"),
     path("logout/", LogoutView.as_view(), name="logout"),
@@ -35,6 +35,7 @@ urlpatterns = [
     path("shop/", shop, name="shop"),
     path("shops/", shops, name="shops"),
     path("product/<uuid:product_id>/", product_detail, name="product_detail"),
+    path("add_to_cart/<uuid:product_id>/", add_to_cart, name="add_to_cart"),
 ]
 
 if settings.DEBUG:

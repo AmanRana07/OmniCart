@@ -1,7 +1,7 @@
 # views.py
 
 from django.shortcuts import render, redirect, HttpResponseRedirect, get_object_or_404
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, get_user_model
 from django.views import View
 from .forms import *
 from django.db.models import Q, Count
@@ -12,6 +12,8 @@ import re
 from django.contrib import messages
 from django.http import JsonResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from uuid import UUID
+from django.contrib.auth.decorators import login_required
 
 
 def authentication_login(request):
@@ -48,16 +50,16 @@ def index(request):
     return render(request, "OmniCart/index.html", context)
 
 
-def cart_view(request):
-    customer_id = request.session.get("customer")
-    # Check if the customer is authenticated
-    user_authenticated = customer_id is not None
+# def cart_view(request):
+#     customer_id = request.session.get("customer")
+#     # Check if the customer is authenticated
+#     user_authenticated = customer_id is not None
 
-    context = {
-        "user_authenticated": user_authenticated,
-        "current_page_url": request.path,
-    }
-    return render(request, "OmniCart/cart.html", context)
+#     context = {
+#         "user_authenticated": user_authenticated,
+#         "current_page_url": request.path,
+#     }
+#     return render(request, "OmniCart/cart.html", context)
 
 
 class CustomLoginView(View):
@@ -87,6 +89,13 @@ class CustomLoginView(View):
                 }
                 user_type = customer.user_type
                 # cursor = connection.cursor()
+                user = authenticate(
+                    request,
+                    username=customer,
+                    password=password,
+                    backend="django.contrib.auth.backends.ModelBackend",
+                )
+                login(request, user)
 
                 if customer.user_type == "manufacturer":
                     # Redirect to the manufacturer admin panel
@@ -128,7 +137,13 @@ class RegistrationView(View):
             user = form.save(commit=False)
             user.set_password(form.cleaned_data["password1"])  # Use 'password1' here
             user.save()
-
+            User = get_user_model()
+            new_user = User.objects.create_user(
+                username=user.username,
+                email=user.email,
+                password=form.cleaned_data["password1"],
+            )
+            new_user.save()
             return redirect("login")  # Change 'login' to your login URL
 
         return render(request, self.template_name, {"form": form})
@@ -342,3 +357,37 @@ def product_detail(request, product_id):
     }
 
     return render(request, "OmniCart/product/product_detail.html", context)
+
+
+@login_required(login_url="login")
+def add_to_cart(request, product_id):
+    product = get_object_or_404(Product, product_id=product_id)
+    user = request.user
+
+    # Get or create the user's cart
+    cart, created = Cart.objects.get_or_create(user=user)
+
+    # Check if the product is already in the cart
+    cart_item, item_created = CartItem.objects.get_or_create(cart=cart, product=product)
+
+    # If the item is already in the cart, increase the quantity
+    if not item_created:
+        cart_item.quantity += 1
+        cart_item.save()
+
+    return redirect("cart")
+
+
+@login_required(login_url="login")
+def view_cart(request):
+    user = request.user
+    cart, created = Cart.objects.get_or_create(user=user)
+    user_authenticated, types = authentication_login(request)
+
+    context = {
+        "cart": cart,
+        "user_authenticated": user_authenticated,
+        "type": types,
+    }
+
+    return render(request, "OmniCart/cart.html", context)
