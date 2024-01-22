@@ -391,3 +391,30 @@ def view_cart(request):
     }
 
     return render(request, "OmniCart/cart.html", context)
+
+
+def update_cart_quantity(request, item_id, new_quantity):
+    try:
+        # Get the CartItem based on the item_id
+        cart_item = CartItem.objects.get(id=item_id)
+
+        # Update the quantity
+        cart_item.quantity = new_quantity
+        cart_item.save()
+
+        # Update the total price and quantity in the Cart
+        cart_item.cart.update_total()
+
+        return JsonResponse({"success": True})
+    except CartItem.DoesNotExist:
+        return JsonResponse({"success": False, "message": "CartItem does not exist"})
+
+
+def remove_cart_item(request, item_id):
+    try:
+        cart_item = CartItem.objects.get(id=item_id)
+        cart_item.delete()
+
+        return JsonResponse({"success": True})
+    except CartItem.DoesNotExist:
+        return JsonResponse({"success": False, "message": "CartItem does not exist"})

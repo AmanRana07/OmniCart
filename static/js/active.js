@@ -209,25 +209,92 @@ Version:1.0
 		/*====================================
 		  Cart Plus Minus Button
 		======================================*/
-		var CartPlusMinus = $('.cart-plus-minus');
-		CartPlusMinus.prepend('<div class="dec qtybutton">-</div>');
-		CartPlusMinus.append('<div class="inc qtybutton">+</div>');
-		$(".qtybutton").on("click", function() {
-			var $button = $(this);
-			var oldValue = $button.parent().find("input").val();
-			if ($button.text() === "+") {
-				var newVal = parseFloat(oldValue) + 1;
-			} else {
-				// Don't allow decrementing below zero
-				if (oldValue > 0) {
-					var newVal = parseFloat(oldValue) - 1;
-				} else {
-					newVal = 1;
-				}
-			}
-			$button.parent().find("input").val(newVal);
-		});
+	
+			// Plus button click
+			$('.plus button').on('click', function () {
+			  var itemId = $(this).data('item-id');
+			  var currentQuantity = parseInt($('input[name="quant[' + itemId + ']"]').val());
+			  var newQuantity = currentQuantity + 1;
 		
+			  updateCartItemQuantity(itemId, newQuantity);
+			});
+		
+			// Minus button click
+			$('.minus button').on('click', function () {
+			  var itemId = $(this).data('item-id');
+			  var currentQuantity = parseInt($('input[name="quant[' + itemId + ']"]').val());
+			  var newQuantity = Math.max(currentQuantity - 1, 1);
+		
+			  updateCartItemQuantity(itemId, newQuantity);
+			});
+		
+			function updateCartItemQuantity(itemId, newQuantity) {
+			  // Make AJAX request to update quantity
+			  $.ajax({
+				url: '/update-cart-quantity/' + itemId + '/' + newQuantity + '/',
+				type: 'GET',
+				success: function (data) {
+				  if (data.success) {
+					// Update the input field value on success
+					$('input[name="quant[' + itemId + ']"]').val(newQuantity);
+					location.reload(true);
+				
+				  } else {
+					console.error('Failed to update cart quantity:', data.message);
+				  }
+				},
+				error: function () {
+				  console.error('Failed to update cart quantity. Server error.');
+				}
+			  });
+			}
+		 
+
+			$('.remove-item').on('click', function(e) {
+				e.preventDefault();
+				
+				var itemId = $(this).data('item-id');
+				
+				$.ajax({
+					url: '/remove-cart-item/' + itemId + '/',
+					type: 'GET',
+					success: function(data) {
+						if (data.success) {
+							// Use SweetAlert to show a success message
+							Swal.fire({
+								icon: 'success',
+								title: 'Cart item removed successfully',
+								showConfirmButton: false,
+								timer: 1500 // Close the alert after 1.5 seconds
+							}).then((result) => {
+								/* Read more about isConfirmed, isDenied below */
+								location.reload(true);
+							});
+				
+							// Optionally, you can update the cart UI here without reloading the page
+							// For example, you can remove the corresponding row from the table
+				
+							// Example: remove the table row containing the removed item
+						
+						} else {
+							// Use SweetAlert to show an error message
+							Swal.fire({
+								icon: 'error',
+								title: 'Failed to remove cart item',
+								text: data.message
+							});
+						}
+					},
+					error: function() {
+						// Use SweetAlert to show a server error message
+						Swal.fire({
+							icon: 'error',
+							title: 'Failed to remove cart item',
+							text: 'Server error'
+						});
+					}
+				});
+			});	
 		/*=======================
 		  Extra Scroll JS
 		=========================*/
@@ -253,20 +320,20 @@ Version:1.0
 		/*==================================
 		 12. Product page Quantity Counter
 		 ===================================*/
-		$('.qty-box .quantity-right-plus').on('click', function () {
-			var $qty = $('.qty-box .input-number');
-			var currentVal = parseInt($qty.val(), 10);
-			if (!isNaN(currentVal)) {
-				$qty.val(currentVal + 1);
-			}
-		});
-		$('.qty-box .quantity-left-minus').on('click', function () {
-			var $qty = $('.qty-box .input-number');
-			var currentVal = parseInt($qty.val(), 10);
-			if (!isNaN(currentVal) && currentVal > 1) {
-				$qty.val(currentVal - 1);
-			}
-		});
+		// $('.qty-box .quantity-right-plus').on('click', function () {
+		// 	var $qty = $('.qty-box .input-number');
+		// 	var currentVal = parseInt($qty.val(), 10);
+		// 	if (!isNaN(currentVal)) {
+		// 		$qty.val(currentVal + 1);
+		// 	}
+		// });
+		// $('.qty-box .quantity-left-minus').on('click', function () {
+		// 	var $qty = $('.qty-box .input-number');
+		// 	var currentVal = parseInt($qty.val(), 10);
+		// 	if (!isNaN(currentVal) && currentVal > 1) {
+		// 		$qty.val(currentVal - 1);
+		// 	}
+		// });
 		
 		/*=====================================
 		15.  Video Popup JS

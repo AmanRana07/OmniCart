@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 import uuid
 from django.contrib.auth.models import User
+from decimal import Decimal
+
 
 
 class CustomUserManager(BaseUserManager):
@@ -92,6 +94,20 @@ class Cart(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s Cart"
+    
+    def update_total(self):
+        # Calculate total price and quantity based on CartItems
+        total_price = Decimal(0)
+        total_quantity = 0
+
+        for item in self.items.all():
+            total_price += item.product.unit_price * item.quantity
+            total_quantity += item.quantity
+
+        # Update the Cart's total price and quantity
+        self.total_price = total_price
+        self.total_quantity = total_quantity
+        self.save()
 
 
 class CartItem(models.Model):
@@ -105,6 +121,8 @@ class CartItem(models.Model):
         self.cart.total_quantity += self.quantity
         self.cart.save()
         super().save(*args, **kwargs)
+    
+        
 
     def delete(self, *args, **kwargs):
         # Update the cart's total price and total quantity when deleting a CartItem
