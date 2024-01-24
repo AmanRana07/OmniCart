@@ -72,34 +72,34 @@ class CustomLoginView(View):
 
     def post(self, request):
         email = request.POST.get("username")
-
         password = request.POST.get("password")
+
         if re.search(r"^[\w\.\+\-]+\@[\w]+\.[a-z]{2,3}$", email):
             customer = Customer.get_customer_by_email(email)
         else:
             customer = Customer.get_customer_by_username(email)
+
         error_message = None
-        if customer:
-            flag = check_password(password, customer.password)
-            if flag:
-                # Convert the UUID to a string before storing it in the session
-                request.session["customer"] = {
-                    "id": str(customer.id),
-                    "username": customer.username,
-                }
-                user_type = customer.user_type
-                # cursor = connection.cursor()
-                user = authenticate(
-                    request,
-                    username=customer,
-                    password=password,
-                    backend="django.contrib.auth.backends.ModelBackend",
-                )
+        user_type = None
+
+        if customer and check_password(password, customer.password):
+            # Convert the UUID to a string before storing it in the session
+            request.session["customer"] = {
+                "id": str(customer.id),
+                "username": customer.username,
+            }
+            user_type = customer.user_type
+
+            user = authenticate(request, username=email, password=password)
+
+            if user is not None:
                 login(request, user)
 
                 if customer.user_type == "manufacturer":
                     # Redirect to the manufacturer admin panel
-                    return redirect("admin_panel", customer_id=str(customer.id))
+                    return redirect(
+                        reverse("admin_panel", kwargs={"customer_id": str(customer.id)})
+                    )
                 else:
                     if CustomLoginView.return_url:
                         return HttpResponseRedirect(CustomLoginView.return_url)
@@ -107,9 +107,8 @@ class CustomLoginView(View):
                         CustomLoginView.return_url = None
                         # Redirect to the home page or another named URL
                         return redirect("index")
-                    # return redirect("index")  # Change 'home' to your home URL name
             else:
-                error_message = "Password is not Correct!! Please Check the Password:)"
+                error_message = "Authentication failed"
         else:
             error_message = "Invalid login credentials"
 
@@ -117,7 +116,7 @@ class CustomLoginView(View):
             "type": user_type,
             "customer": customer,
             "error_message": error_message,
-            "user_authenticated": False,  # Set authentication status to False on login failure
+            "user_authenticated": False,
         }
 
         return render(request, self.template_name, context)
@@ -453,8 +452,8 @@ def checkout(request):
 
             # Clear the cart
             cart_items = cart.items.all()
-        
-        # Delete cart items individually using filter
+
+            # Delete cart items individually using filter
             for cart_item in cart_items:
                 cart_item.delete()
 
