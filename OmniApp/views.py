@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, get_user_model
 from django.views import View
 from .forms import *
 from django.db.models import Q, Count
-from .models import Customer
+from .models import Customer, Order
 from django.contrib.auth.hashers import check_password
 from django.urls import reverse
 import re
@@ -418,3 +418,83 @@ def remove_cart_item(request, item_id):
         return JsonResponse({"success": True})
     except CartItem.DoesNotExist:
         return JsonResponse({"success": False, "message": "CartItem does not exist"})
+
+
+# Now Checkout page
+
+
+@login_required(login_url="login")
+def checkout(request):
+    user = request.user
+    cart, created = Cart.objects.get_or_create(user=user)
+    user_authenticated, types = authentication_login(request)
+
+    customer_session = request.session.get("customer")
+    customer_id = customer_session.get("id") if customer_session else None
+
+    if customer_id:
+        customer = Customer.objects.get(id=customer_id)
+    else:
+        customer = None
+
+    if request.method == "POST":
+        try:
+            # Create a new order
+            order = Order.objects.create(user=user, total_price=cart.total_price)
+
+            # Move cart items to order items
+            for cart_item in cart.items.all():
+                OrderItem.objects.create(
+                    order=order,
+                    product=cart_item.product,
+                    quantity=cart_item.quantity,
+                    unit_price=cart_item.product.unit_price,
+                )
+
+            # Clear the cart
+            cart_items = cart.items.all()
+        
+        # Delete cart items individually using filter
+            for cart_item in cart_items:
+                cart_item.delete()
+
+            # Delete the cart
+            cart.delete()
+
+            # Redirect to a success page
+            return redirect(reverse("order_success", kwargs={"order_id": order.id}))
+
+        except Exception as e:
+            print(f"Error during checkout: {e}")
+
+    context = {
+        "cart": cart,
+        "user_authenticated": user_authenticated,
+        "customer": customer,
+        "type": types,
+    }
+    return render(request, "OmniCart/checkout.html", context)
+
+
+def order_success(request, order_id):
+    # Fetch the order and customer information
+    try:
+        order = Order.objects.get(id=order_id)
+        user_authenticated, types = authentication_login(request)
+        customer_session = request.session.get("customer")
+        customer_id = customer_session.get("id") if customer_session else None
+
+        if customer_id:
+            customer = Customer.objects.get(id=customer_id)
+        else:
+            customer = None
+
+    except Order.DoesNotExist or Customer.DoesNotExist:
+        return redirect("index")
+
+    context = {
+        "order": order,
+        "customer": customer,
+    }
+
+    return render(request, "OmniCart/order_success.html", context)

@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 from decimal import Decimal
 
 
-
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, username, password=None, **extra_fields):
         if not email:
@@ -94,7 +93,7 @@ class Cart(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s Cart"
-    
+
     def update_total(self):
         # Calculate total price and quantity based on CartItems
         total_price = Decimal(0)
@@ -121,8 +120,6 @@ class CartItem(models.Model):
         self.cart.total_quantity += self.quantity
         self.cart.save()
         super().save(*args, **kwargs)
-    
-        
 
     def delete(self, *args, **kwargs):
         # Update the cart's total price and total quantity when deleting a CartItem
@@ -133,3 +130,37 @@ class CartItem(models.Model):
 
     def __str__(self):
         return f"{self.product.product_name} in {self.cart.user.username}'s Cart"
+
+
+class Order(models.Model):
+    PENDING = "pending"
+    PROCESSING = "processing"
+    SHIPPED = "shipped"
+    DELIVERED = "delivered"
+
+    STATUS_CHOICES = [
+        (PENDING, "Pending"),
+        (PROCESSING, "Processing"),
+        (SHIPPED, "Shipped"),
+        (DELIVERED, "Delivered"),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=PENDING)
+    order_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Order #{self.id} by {self.user.username}"
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, related_name="items", on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return (
+            f"{self.quantity} x {self.product.product_name} in Order #{self.order.id}"
+        )
