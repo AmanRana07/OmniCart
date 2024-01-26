@@ -497,3 +497,7 @@ def order_success(request, order_id):
     }
 
     return render(request, "OmniCart/order_success.html", context)
+
+
+def privacy(request):
+    return render(request,'OmniCart/info/privacy.html')
