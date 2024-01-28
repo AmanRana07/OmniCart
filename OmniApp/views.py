@@ -501,3 +501,6 @@ def order_success(request, order_id):
 
 def privacy(request):
     return render(request,'OmniCart/info/privacy.html')
+
+def payment(request):
+    return render(request,'OmniCart/info/payment.html')
