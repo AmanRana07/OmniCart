@@ -1,7 +1,7 @@
 # views.py
 
 from django.shortcuts import render, redirect, HttpResponseRedirect, get_object_or_404
-from django.contrib.auth import authenticate, login, get_user_model
+from django.contrib.auth import authenticate, login, get_user_model, logout
 from django.views import View
 from .forms import *
 from django.db.models import Q, Count
@@ -14,6 +14,7 @@ from django.http import JsonResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from uuid import UUID
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 
 def authentication_login(request):
@@ -134,7 +135,7 @@ class RegistrationView(View):
 
         if form.is_valid():
             user = form.save(commit=False)
-            user.set_password(form.cleaned_data["password1"])  # Use 'password1' here
+            user.set_password(form.cleaned_data["password"])  # Use 'password1' here
             user.save()
             User = get_user_model()
             new_user = User.objects.create_user(
@@ -153,6 +154,7 @@ class LogoutView(View):
 
     def get(self, request):
         request.session.clear()
+        logout(request)
         return redirect("login")
 
     def post(self, request):
@@ -316,6 +318,66 @@ def shop(request):
     }
 
     return render(request, "OmniCart/product/shop.html", context)
+
+
+# Order View
+def order_list(request):
+    # Check if the logged-in user is a manufacturer
+    customer_session = request.session.get("customer")
+
+    if customer_session:
+        customer_id = customer_session.get("id")
+        try:
+            customer = Customer.objects.get(id=customer_id, user_type="manufacturer")
+            # Filter products based on the manufacturer ID
+            products = Product.objects.filter(manufacturer_id=customer)
+            orders = Order.objects.filter(items__product__in=products).distinct()
+            return render(
+                request, "OmniCart/admin/order/view-order.html", {"orders": orders}
+            )
+        except Customer.DoesNotExist:
+            # Handle the case where the customer does not exist or is not a manufacturer
+            messages.error(request, "Invalid customer or not a manufacturer.")
+            return redirect("login")  # Redirect to the login page or handle as needed
+    else:
+        # Handle the case where the customer is not logged in
+        messages.error(request, "Please log in as a manufacturer.")
+        return redirect("login")
+
+
+def order_detail(request, order_id):
+    # Retrieve the order
+    order = get_object_or_404(Order, id=order_id)
+    # print(order.user_id)
+    # Retrieve the customer who placed the order
+    customer = get_object_or_404(User, id=order.user_id)
+    customers = Customer.objects.get(email=customer.email)
+
+    # You can customize this context based on your requirements
+    context = {
+        "order": order,
+        "customer": customers,
+    }
+
+    return render(request, "OmniCart/admin/order/order_detail.html", context)
+
+
+def update_order_status(request, order_id):
+    # Retrieve the order
+    order = get_object_or_404(Order, id=order_id)
+
+    if request.method == "POST":
+        # Get the new status from the form
+        new_status = request.POST.get("status")
+        if new_status:
+            # Update the order status
+            order.status = new_status
+            order.save()
+            # Redirect back to the order list page
+            return redirect("order_list")
+
+    # If the request method is not POST or status is not provided, redirect back to the order list page
+    return redirect("order_list")
 
 
 def shops(request):
@@ -494,10 +556,8 @@ def order_success(request, order_id):
     context = {
         "order": order,
         "customer": customer,
+        "user_authenticated": user_authenticated,
+        "type": types,
     }
 
     return render(request, "OmniCart/order_success.html", context)
-
-
-def privacy(request):
-    return render(request,'OmniCart/info/privacy.html')
