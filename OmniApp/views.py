@@ -580,3 +580,12 @@ def privacy(request):
         "type": types,
     }
     return render(request,'OmniCart/info/privacy.html',context)
+
+def pymntmethods(request):
+    
+    user_authenticated, types = authentication_login(request)
+    context = {
+        "user_authenticated": user_authenticated,
+        "type": types,
+    }
+    return render(request,'OmniCart/info/pymntmethods.html',context)
