@@ -15,12 +15,13 @@ body {
   }
   
   .return-policy-container {
-    max-width: 800px;
-    margin: 20px auto;
+    max-width: 1000px;
+    height: 500px;
+    margin: 12px auto;
     padding: 20px;
-    background-color: #fff;
+    background-color:#fff;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
+    border-radius: 15px;
     animation: fadeIn 2s ease-in-out;
   }
   
@@ -33,14 +34,16 @@ body {
   
   .return-options {
     display: flex;
-    justify-content: space-around;
+    justify-content:flex-start;
     flex-wrap: wrap;
+    padding: 40px;
+    
   }
   
   .return-option {
-    flex: 0 0 calc(33.3333% - 20px);
-    margin: 10px;
-    padding: 20px;
+    flex: 0 0 calc(33.3333% - 10px);
+    margin-top: 5px;
+    padding: 8px;
     text-align: center;
     background-color: #f9f9f9;
     border-radius: 8px;
@@ -53,7 +56,7 @@ body {
   }
   
   p {
-    line-height: 1.5;
+    line-height: 1.8;
   }
   
   .highlight {
@@ -83,10 +86,10 @@ body {
   .fun-effect:hover::before {
     content: '🎉';
     position: absolute;
-    top: -20px;
-    left: 50%;
+    top: -10px;
+    left: 40%;
     transform: translateX(-50%);
-    font-size: 2rem;
+    font-size: 1rem;
     animation: bounce 0.5s ease-in-out;
   }
   
