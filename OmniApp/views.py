@@ -572,3 +572,11 @@ def shipping(request):
     }
     return render(request,'OmniCart/info/shipping.html',context)
 
+def privacy(request):
+    
+    user_authenticated, types = authentication_login(request)
+    context = {
+        "user_authenticated": user_authenticated,
+        "type": types,
+    }
+    return render(request,'OmniCart/info/privacy.html',context)

@@ -48,6 +48,7 @@ urlpatterns = [
     path("orders/<int:order_id>/", order_detail, name="order_detail"),
     path('orders/<int:order_id>/update-status/', update_order_status, name='update_order_status'),
     path('shipping-policy/', shipping, name="shipping"),
+    path('privacy-policy/', privacy, name="privacy")
 ]
 
 if settings.DEBUG:
