@@ -589,3 +589,12 @@ def pymntmethods(request):
         "type": types,
     }
     return render(request,'OmniCart/info/pymntmethods.html',context)
+
+def returns(request):
+    
+    user_authenticated, types = authentication_login(request)
+    context = {
+        "user_authenticated": user_authenticated,
+        "type": types,
+    }
+    return render(request,'OmniCart/info/returns.html',context)

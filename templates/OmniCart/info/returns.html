@@ -1,11 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="return.css">
-  <title>E-commerce Return Policy</title>
-</head>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head_title %}OmniCart- Payment Policy{% endblock head_title %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/returns.css' %}">
+{% endblock styles %}
+
+{% block content %}
+
 <body>
   <header class="header">
     Return Policy
@@ -49,3 +52,5 @@
   </section>
 </body>
 </html>
+
+{% endblock content %}
