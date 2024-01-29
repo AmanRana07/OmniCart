@@ -20,7 +20,7 @@
                     <ul class="list-main">
                         <li><i class="ti-location-pin"></i> Store location</li>
                         <li><i class="ti-alarm-clock"></i> <a href="#">Daily deal</a></li>
-                        {% if user_authenticated %}
+                        {% if user_authenticated or user.is_authenticated %}
                         {% if type == "manufacturer" %}
                         <li><i class="ti-user"></i> <a href="{% url 'admin_panel' customer_id=request.session.customer.id %}">My account</a></li>
                     {% else %}

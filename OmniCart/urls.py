@@ -44,10 +44,10 @@ urlpatterns = [
     path("remove-cart-item/<int:item_id>/", remove_cart_item, name="remove_cart_item"),
     path("checkout/", checkout, name="checkout"),
     path("order-success/<int:order_id>/", order_success, name="order_success"),
-    path('privacy',privacy,name='privacy'),
-    path('payment',payment,name='payment')
-    
-
+    path('payment-policy/',payment,name='payment'),
+    path("orders/", order_list, name="order_list"),
+    path("orders/<int:order_id>/", order_detail, name="order_detail"),
+    path('orders/<int:order_id>/update-status/', update_order_status, name='update_order_status'),
 ]
 
 if settings.DEBUG:
