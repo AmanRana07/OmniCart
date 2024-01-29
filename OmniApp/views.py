@@ -562,12 +562,13 @@ def order_success(request, order_id):
 
     return render(request, "OmniCart/order_success.html", context)
 
-def payment(request):
+    
+def shipping(request):
     
     user_authenticated, types = authentication_login(request)
     context = {
         "user_authenticated": user_authenticated,
         "type": types,
     }
-    return render(request,'OmniCart/info/payment.html')
+    return render(request,'OmniCart/info/shipping.html',context)
 
