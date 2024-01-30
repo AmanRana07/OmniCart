@@ -51,7 +51,6 @@ urlpatterns = [
     path('privacy-policy/', privacy, name="privacy"),
     path('payment-methods/',pymntmethods, name="pymntmethods"),
     path('returns-policy/',returns, name="returns"),
-    
 ]
 
 if settings.DEBUG:

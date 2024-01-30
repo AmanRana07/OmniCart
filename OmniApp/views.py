@@ -599,3 +599,4 @@ def returns(request):
     }
     return render(request,'OmniCart/info/returns.html',context)
 
+
