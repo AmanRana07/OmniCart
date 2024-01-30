@@ -598,3 +598,4 @@ def returns(request):
         "type": types,
     }
     return render(request,'OmniCart/info/returns.html',context)
+
