@@ -599,4 +599,13 @@ def returns(request):
     }
     return render(request,'OmniCart/info/returns.html',context)
 
+def moneyback(request):
+    
+    user_authenticated, types = authentication_login(request)
+    context = {
+        "user_authenticated": user_authenticated,
+        "type": types,
+    }
+    return render(request,'OmniCart/info/moneyback.html',context)
+
 
