@@ -55,7 +55,9 @@ urlpatterns = [
     path("aboutus/",about_us,name='about_us'),
     path("contactus/",contact_us,name='contact_us'),
     path("faq/",faq,name='faq'),
+    path("help/",help,name='help'),
     
+
    
 ]
 
