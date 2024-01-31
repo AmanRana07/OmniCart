@@ -632,3 +632,16 @@ def contact_us(request):
     }
 
     return render(request, "OmniCart/product/contactus.html", context)
+
+def faq(request):
+
+    user_authenticated, types = authentication_login(request)
+
+    context = {
+        "user_authenticated": user_authenticated,
+        "type": types,
+        "current_page_url": request.path,
+    }
+
+    return render(request, "OmniCart/product/faq.html", context)
+

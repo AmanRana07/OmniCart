@@ -54,6 +54,8 @@ urlpatterns = [
     path('moneyback-policy/',moneyback, name="moneyback"),
     path("aboutus/",about_us,name='about_us'),
     path("contactus/",contact_us,name='contact_us'),
+    path("faq/",faq,name='faq'),
+    
    
 ]
 
