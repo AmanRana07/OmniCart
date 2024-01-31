@@ -135,7 +135,7 @@ class RegistrationView(View):
 
         if form.is_valid():
             user = form.save(commit=False)
-            user.set_password(form.cleaned_data["password"])  # Use 'password1' here
+            user.set_password(form.cleaned_data["password1"])  # Use 'password1' here
             user.save()
             User = get_user_model()
             new_user = User.objects.create_user(
