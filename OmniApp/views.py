@@ -609,3 +609,15 @@ def moneyback(request):
     return render(request,'OmniCart/info/moneyback.html',context)
 
 
+def about_us(request):
+
+    user_authenticated, types = authentication_login(request)
+
+    context = {
+        "user_authenticated": user_authenticated,
+        "type": types,
+        "current_page_url": request.path,
+    }
+
+    return render(request, "OmniCart/product/aboutus.html", context)
+

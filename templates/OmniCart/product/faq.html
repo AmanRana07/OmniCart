@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block head_title %}OmniCart-TERMS AND CONDITIONS{% endblock %}
+{% load static %}
+{% block style %} <link rel="stylesheet" href="{% static 'css/faq.css' %}"> {% endblock %}
+{% block content %}
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+
+       
+
+        h1 {
+            margin: 0;
+        }
+
+        section {
+            margin-bottom: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        p {
+            line-height: 1.6;
+        }
+
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #888;
+            font-size: 0.8em;
+        }
+    </style>
+
+
+    <section>
+        <h2>General Questions</h2>
+        <p><strong>Q: What is our ecommerce platform?</strong></p>
+        <p>A: Our ecommerce platform is an online marketplace where you can buy and sell a variety of products.</p>
+
+        <p><strong>Q: How do I create an account?</strong></p>
+        <p>A: To create an account, click on the "Sign Up" button and follow the registration process.</p>
+
+        <!-- Add more FAQ entries as needed -->
+    </section>
+
+    <section>
+        <h2>Order and Payment</h2>
+        <p><strong>Q: How do I place an order?</strong></p>
+        <p>A: Select the desired products, add them to your cart, and proceed to checkout to place an order.</p>
+
+        <p><strong>Q: What payment methods do you accept?</strong></p>
+        <p>A: We accept credit/debit cards and other secure payment methods. View our payment options during checkout.</p>
+
+        <!-- Add more FAQ entries as needed -->
+    </section>
+    
+{% endblock content %}
+
