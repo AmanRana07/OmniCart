@@ -616,3 +616,49 @@ def tag_view(request, tag_id):
     return render(
         request, "OmniCart/product/tag.html", {"products": products_page, "tag": tag}
     )
+
+def shipping(request):
+    
+    user_authenticated, types = authentication_login(request)
+    context = {
+        "user_authenticated": user_authenticated,
+        "type": types,
+    }
+    return render(request,'OmniCart/info/shipping.html',context)
+
+
+def privacy(request):
+    
+    user_authenticated, types = authentication_login(request)
+    context = {
+        "user_authenticated": user_authenticated,
+        "type": types,
+    }
+    return render(request,'OmniCart/info/privacy.html',context)
+
+def paymentmethods(request):
+    
+    user_authenticated, types = authentication_login(request)
+    context = {
+        "user_authenticated": user_authenticated,
+        "type": types,
+    }
+    return render(request,'OmniCart/info/paymentmethods.html',context)
+
+def returns(request):
+    
+    user_authenticated, types = authentication_login(request)
+    context = {
+        "user_authenticated": user_authenticated,
+        "type": types,
+    }
+    return render(request,'OmniCart/info/return.html',context)
+
+def moneyback(request):
+    
+    user_authenticated, types = authentication_login(request)
+    context = {
+        "user_authenticated": user_authenticated,
+        "type": types,
+    }
+    return render(request,'OmniCart/info/moneyback.html',context)
