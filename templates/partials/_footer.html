@@ -18,11 +18,11 @@
                 <div class="single-footer links">
                     <h4>Information</h4>
                     <ul>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Faq</a></li>
-                        <li><a href="#">Terms & Conditions</a></li>
-                        <li><a href="#">Contact Us</a></li>
-                        <li><a href="#">Help</a></li>
+                        <li><a href="{% url  'about_us' %}">About Us</a></li>
+                        <li><a href="{% url  'faq' %}">Faq</a></li>
+                        <li><a href="{% url  'terms_and_conditions' %}">Terms & Conditions</a></li>
+                        <li><a href="{% url  'contact_us' %}">Contact Us</a></li>
+                        <li><a href="{% url  'help' %}">Help</a></li>
                     </ul>
                 </div>
                 <!-- End Single Widget -->
@@ -32,10 +32,17 @@
                 <div class="single-footer links">
                     <h4>Customer Service</h4>
                     <ul>
+<<<<<<< HEAD
                         <li><a href="{% url 'paymentmethods'%}">Payment Methods</a></li>
                         <li><a href="{% url 'moneyback'%}">Money-back</a></li>
                         <li><a href="{% url 'return'%}">Return</a></li>
                         <li><a href="{% url 'shipping'%}">Shipping</a></li>
+=======
+                        <li><a href="{% url 'pymntmethods'%}">Payment Methods</a></li>
+                        <li><a href="{% url 'moneyback'%}">Money-back</a></li>
+                        <li><a href="{% url 'returns' %}">Returns</a></li>
+                        <li><a href="{% url 'shipping' %}">Shipping</a></li>
+>>>>>>> d958d4ea080fce65eae4974cba680b2869e91731
                         <li><a href="{% url 'privacy'%}">Privacy Policy</a></li>
                     </ul>
                 </div>

@@ -46,6 +46,7 @@ urlpatterns = [
     path("order-success/<int:order_id>/", order_success, name="order_success"),
     path("orders/", order_list, name="order_list"),
     path("orders/<int:order_id>/", order_detail, name="order_detail"),
+<<<<<<< HEAD
     path(
         "orders/<int:order_id>/update-status/",
         update_order_status,
@@ -60,7 +61,22 @@ urlpatterns = [
     path('payment-methods/',paymentmethods, name="pymntmethods"),
     path('returns-policy/',returns, name="returns"),
     path('moneyback-policy/',moneyback, name="moneyback"),
+=======
+    path('orders/<int:order_id>/update-status/', update_order_status, name='update_order_status'),
+    path('shipping-policy/', shipping, name="shipping"),
+    path('privacy-policy/', privacy, name="privacy"),
+    path('payment-methods/',pymntmethods, name="pymntmethods"),
+    path('returns-policy/',returns, name="returns"),
+    path('moneyback-policy/',moneyback, name="moneyback"),
+    path("aboutus/",about_us,name='about_us'),
+    path("contactus/",contact_us,name='contact_us'),
+    path("faq/",faq,name='faq'),
+    path("help/",help,name='help'),
+    path("termsandconditions/",terms_and_condition,name='terms_and_conditions'),
+    
+>>>>>>> d958d4ea080fce65eae4974cba680b2869e91731
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL)
