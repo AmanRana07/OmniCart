@@ -3,6 +3,7 @@
 from django.shortcuts import render, redirect, HttpResponseRedirect, get_object_or_404
 from django.contrib.auth import authenticate, login, get_user_model, logout
 from django.views import View
+from torch import Tag
 from .forms import *
 from django.db.models import Q, Count
 from .models import Customer, Order
@@ -625,7 +626,6 @@ def contact_us(request):
 
     user_authenticated, types = authentication_login(request)
 
-<<<<<<< HEAD
 def tag_view(request, tag_id):
     # Get tag
     tag = Tag.objects.get(id=tag_id)
@@ -691,7 +691,6 @@ def moneyback(request):
         "type": types,
     }
     return render(request,'OmniCart/info/moneyback.html',context)
-=======
     context = {
         "user_authenticated": user_authenticated,
         "type": types,
@@ -735,4 +734,3 @@ def terms_and_condition(request):
     }
 
     return render(request, "OmniCart/info/termsandcondition.html", context)
->>>>>>> d958d4ea080fce65eae4974cba680b2869e91731
