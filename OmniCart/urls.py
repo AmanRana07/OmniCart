@@ -14,6 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path
 from OmniApp.views import *
@@ -55,6 +56,7 @@ urlpatterns = [
     path("category/<int:category_id>/", category_view, name="category"),
     path("tags/<int:tag_id>/", tag_view, name="tag"),
     path("get-tags/", get_tag, name="get_tag"),
+    path("search/", search_view, name="search_view"),
 ]
 
 if settings.DEBUG:

@@ -674,3 +674,31 @@ def tag_view(request, tag_id):
     return render(
         request, "OmniCart/product/tag.html", {"products": products_page, "tag": tag}
     )
+
+
+def search_view(request):
+    query = request.GET.get("search")
+
+    if query:
+        # Search products, categories, and tags
+        products = Product.objects.filter(product_name__icontains=query)
+        categories = Categoryies.objects.filter(name__icontains=query)
+        tags = Tag.objects.filter(name__icontains=query)
+
+        # Get products associated with matching categories and tags
+        category_products = Product.objects.filter(categories__name__icontains=query)
+        tag_products = Product.objects.filter(tags__name__icontains=query)
+
+        # Merge product lists to remove duplicates
+        associated_products = (category_products | tag_products).distinct()
+    else:
+        products = categories = tags = associated_products = None
+
+    context = {
+        "query": query,
+        "products": products,
+        "categories": categories,
+        "tags": tags,
+        "associated_products": associated_products,
+    }
+    return render(request, "OmniCart/product/search_results.html", context)
