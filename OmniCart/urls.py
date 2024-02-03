@@ -57,6 +57,13 @@ urlpatterns = [
     path("tags/<int:tag_id>/", tag_view, name="tag"),
     path("get-tags/", get_tag, name="get_tag"),
     path("search/", search_view, name="search_view"),
+    path('payment-methods/',pymntmethods, name="pymntmethods"),
+    path('returns-policy/',returns, name="returns"),
+    path('moneyback-policy/',moneyback, name="moneyback"),
+    path('shipping-policy/', shipping, name="shipping"),
+    path('privacy-policy/', privacy, name="privacy"),
+
+
 ]
 
 if settings.DEBUG:
