@@ -457,12 +457,22 @@ def shops(request):
     return render(request, "OmniCart/product/shops.html", context)
 
 
+@login_required(login_url="login")
 def product_detail(request, product_id):
     # Retrieve the product details based on the product_id
     product = get_object_or_404(Product, product_id=product_id)
+    user = request.user
+    cart, created = Cart.objects.get_or_create(user=user)
+    cart_item, item_created = CartItem.objects.get_or_create(cart=cart, product=product)
+
+    user_authenticated, types = authentication_login(request)
 
     context = {
         "product": product,
+        "cart": cart,
+        "item": cart_item,
+        "user_authenticated": user_authenticated,
+        "type": types,
     }
 
     return render(request, "OmniCart/product/product_detail.html", context)
