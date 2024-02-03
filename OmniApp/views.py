@@ -3,6 +3,7 @@
 from django.shortcuts import render, redirect, HttpResponseRedirect, get_object_or_404
 from django.contrib.auth import authenticate, login, get_user_model, logout
 from django.views import View
+from torch import Tag
 from .forms import *
 from django.db.models import Q, Count
 from .models import Customer, Order
@@ -625,6 +626,77 @@ def contact_us(request):
 
     user_authenticated, types = authentication_login(request)
 
+<<<<<<< HEAD
+=======
+def tag_view(request, tag_id):
+    # Get tag
+    tag = Tag.objects.get(id=tag_id)
+    # Get products associated with the tag
+    products = Product.objects.filter(tags__id=tag_id)
+    # Paginate products
+    paginator = Paginator(products, 10)  # 10 products per page
+    page_number = request.GET.get("page")
+    try:
+        products_page = paginator.page(page_number)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        products_page = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        products_page = paginator.page(paginator.num_pages)
+    return render(
+        request, "OmniCart/product/tag.html", {"products": products_page, "tag": tag}
+    )
+
+def shipping(request):
+    
+    user_authenticated, types = authentication_login(request)
+    context = {
+        "user_authenticated": user_authenticated,
+        "type": types,
+    }
+    return render(request,'OmniCart/info/shipping.html',context)
+
+
+def privacy(request):
+    
+    user_authenticated, types = authentication_login(request)
+    context = {
+        "user_authenticated": user_authenticated,
+        "type": types,
+    }
+    return render(request,'OmniCart/info/privacy.html',context)
+
+def paymentmethods(request):
+    
+    user_authenticated, types = authentication_login(request)
+    context = {
+        "user_authenticated": user_authenticated,
+        "type": types,
+    }
+    return render(request,'OmniCart/info/paymentmethods.html',context)
+
+def returns(request):
+    
+    user_authenticated, types = authentication_login(request)
+    context = {
+        "user_authenticated": user_authenticated,
+        "type": types,
+    }
+    return render(request,'OmniCart/info/return.html',context)
+
+def moneyback(request):
+    
+    user_authenticated, types = authentication_login(request)
+    context = {
+        "user_authenticated": user_authenticated,
+        "type": types,
+    }
+    return render(request,'OmniCart/info/moneyback.html',context)
+
+def contact_us(request):
+    
+    user_authenticated, types = authentication_login(request)
     context = {
         "user_authenticated": user_authenticated,
         "type": types,

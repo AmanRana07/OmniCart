@@ -84,6 +84,10 @@ h2{
 }
 #dragDrop .content p.lighter{
 	opacity: .8;
+<<<<<<< HEAD
+=======
+	padding:10px
+>>>>>>> fe7c6d982afb9fd7fe4369dc1955830ce6a974ff
 }
 .section p{
 	font-size: 17px;
