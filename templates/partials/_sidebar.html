@@ -6,11 +6,11 @@
         <!-- duplicate or remove this li tag if you want to add or remove navlink with submenu -->
         <!-- start -->
         <li class="item">
-         
+          <a href="{% url 'admin_panel' customer_id=request.session.customer.id %}" style="text-decoration: none;">
             <span class="navlink_icon">
               <i class='bx bxs-dashboard'></i>
             </span>
-            <span class="navlink">Dashboard</span>
+           <span class="navlink">Dashboard</span></a>
           <!-- </a> -->
         </li>
        

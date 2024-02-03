@@ -39,6 +39,8 @@ body.dark {
   padding: 15px 30px;
   z-index: 1000;
   box-shadow: 0 0 2px var(--grey-color-light);
+  border-bottom: 2px solid #F6941C;
+  border-top: 2px solid #F6941C;
 }
 .logo_item {
   display: flex;
@@ -96,6 +98,8 @@ body.dark {
   overflow-y: scroll;
   box-shadow: 0 0 1px var(--grey-color-light);
   transition: all 0.5s ease;
+  border-right: 2px solid #F6941C;
+
 }
 .sidebar.close {
   padding: 60px 0;

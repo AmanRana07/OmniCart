@@ -3,10 +3,9 @@
 from django.shortcuts import render, redirect, HttpResponseRedirect, get_object_or_404
 from django.contrib.auth import authenticate, login, get_user_model, logout
 from django.views import View
-from torch import Tag
 from .forms import *
 from django.db.models import Q, Count
-from .models import Customer, Order
+from .models import Customer, Order, Categoryies, Tag
 from django.contrib.auth.hashers import check_password
 from django.urls import reverse
 import re
@@ -16,6 +15,10 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from uuid import UUID
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.utils.timezone import datetime
+from django.db.models import Sum
+from django.db.models.functions import TruncMonth
+import json
 
 
 def authentication_login(request):
@@ -168,10 +171,48 @@ class AdminPanelView(View):
 
     def get(self, request, customer_id):
         try:
-            customer = Customer.objects.get(id=customer_id, user_type="manufacturer")
+            customer = request.user
+            customers = Customer.objects.get(id=customer_id, user_type="manufacturer")
+            total_products = Product.objects.filter(manufacturer_id=customers).count()
+            pending_orders = Order.objects.filter(
+                status="pending", user=customer
+            ).order_by("-order_date")
+            order_count = OrderItem.objects.filter(
+                product__manufacturer_id=customers
+            ).count()
+            # Count orders with each status related to the manufacturer's products
+            pending_count = OrderItem.objects.filter(
+                product__manufacturer_id=customers, order__status="pending"
+            ).count()
+            processing_count = OrderItem.objects.filter(
+                product__manufacturer_id=customers, order__status="processing"
+            ).count()
+            shipped_count = OrderItem.objects.filter(
+                product__manufacturer_id=customers, order__status="shipped"
+            ).count()
+            delivered_count = OrderItem.objects.filter(
+                product__manufacturer_id=customers, order__status="delivered"
+            ).count()
+            # Get total sales month-wise
+            sales_data = (
+                Order.objects.filter(
+                    user=customer,
+                    status=Order.DELIVERED,
+                )
+                .annotate(month=TruncMonth("order_date"))
+                .values("month")
+                .annotate(total_sales=Sum("items__unit_price"))
+                .order_by("month")
+            )
 
-            # Get the total number of products and customers
-            total_products = Product.objects.filter(manufacturer_id=customer).count()
+            # Prepare data for charting
+            month_labels = []
+            total_sales_data = []
+            for sale in sales_data:
+                month_labels.append(sale["month"].strftime("%B %Y"))
+                total_sales_data.append(float(sale["total_sales"]))  # Convert to float
+
+            total_sales_data_json = json.dumps(total_sales_data)  # Convert to JSON
 
             return render(
                 request,
@@ -179,11 +220,17 @@ class AdminPanelView(View):
                 {
                     "customer": customer,
                     "total_products": total_products,
-                    # "total_customers": total_customers,
+                    "total_orders": order_count,
+                    "month_labels": month_labels,
+                    "pending_orders": pending_orders,
+                    "pending_count": pending_count,
+                    "processing_count": processing_count,
+                    "shipped_count": shipped_count,
+                    "delivered_count": delivered_count,
+                    "total_sales_data": total_sales_data_json,  # Pass as JSON
                 },
             )
         except Customer.DoesNotExist:
-            # Handle the case where the customer or user type does not exist
             return render(
                 request,
                 "OmniCart/error.html",
@@ -563,71 +610,41 @@ def order_success(request, order_id):
 
     return render(request, "OmniCart/order_success.html", context)
 
-    
-def shipping(request):
-    
-    user_authenticated, types = authentication_login(request)
-    context = {
-        "user_authenticated": user_authenticated,
-        "type": types,
-    }
-    return render(request,'OmniCart/info/shipping.html',context)
 
-def privacy(request):
-    
-    user_authenticated, types = authentication_login(request)
-    context = {
-        "user_authenticated": user_authenticated,
-        "type": types,
-    }
-    return render(request,'OmniCart/info/privacy.html',context)
-
-def pymntmethods(request):
-    
-    user_authenticated, types = authentication_login(request)
-    context = {
-        "user_authenticated": user_authenticated,
-        "type": types,
-    }
-    return render(request,'OmniCart/info/pymntmethods.html',context)
-
-def returns(request):
-    
-    user_authenticated, types = authentication_login(request)
-    context = {
-        "user_authenticated": user_authenticated,
-        "type": types,
-    }
-    return render(request,'OmniCart/info/returns.html',context)
-
-def moneyback(request):
-    
-    user_authenticated, types = authentication_login(request)
-    context = {
-        "user_authenticated": user_authenticated,
-        "type": types,
-    }
-    return render(request,'OmniCart/info/moneyback.html',context)
+# Get All The Categories
 
 
-def about_us(request):
+def get_categories(request):
+    categories = Categoryies.objects.all().values("id", "name")
+    return JsonResponse(list(categories), safe=False)
 
-    user_authenticated, types = authentication_login(request)
 
-    context = {
-        "user_authenticated": user_authenticated,
-        "type": types,
-        "current_page_url": request.path,
-    }
+def category_view(request, category_id):
+    # Get category
+    category = Categoryies.objects.get(id=category_id)
+    # Get products in the category
+    products = Product.objects.filter(categories__id=category_id)
+    # Paginate products
+    paginator = Paginator(products, 10)  # 10 products per page
+    page_number = request.GET.get("page")
+    try:
+        products_page = paginator.page(page_number)
+    except PageNotAnInteger:
+        products_page = paginator.page(1)
+    except EmptyPage:
+        products_page = paginator.page(paginator.num_pages)
+    return render(
+        request,
+        "OmniCart/product/category.html",
+        {"products": products_page, "category": category},
+    )
 
-    return render(request, "OmniCart/info/aboutus.html", context)
 
-def contact_us(request):
+def get_tag(request):
+    tags = Tag.objects.all().values("id", "name")
+    return JsonResponse(list(tags), safe=False)
 
-    user_authenticated, types = authentication_login(request)
 
-<<<<<<< HEAD
-=======
 def tag_view(request, tag_id):
     # Get tag
     tag = Tag.objects.get(id=tag_id)
@@ -647,96 +664,3 @@ def tag_view(request, tag_id):
     return render(
         request, "OmniCart/product/tag.html", {"products": products_page, "tag": tag}
     )
-
-def shipping(request):
-    
-    user_authenticated, types = authentication_login(request)
-    context = {
-        "user_authenticated": user_authenticated,
-        "type": types,
-    }
-    return render(request,'OmniCart/info/shipping.html',context)
-
-
-def privacy(request):
-    
-    user_authenticated, types = authentication_login(request)
-    context = {
-        "user_authenticated": user_authenticated,
-        "type": types,
-    }
-    return render(request,'OmniCart/info/privacy.html',context)
-
-def paymentmethods(request):
-    
-    user_authenticated, types = authentication_login(request)
-    context = {
-        "user_authenticated": user_authenticated,
-        "type": types,
-    }
-    return render(request,'OmniCart/info/paymentmethods.html',context)
-
-def returns(request):
-    
-    user_authenticated, types = authentication_login(request)
-    context = {
-        "user_authenticated": user_authenticated,
-        "type": types,
-    }
-    return render(request,'OmniCart/info/return.html',context)
-
-def moneyback(request):
-    
-    user_authenticated, types = authentication_login(request)
-    context = {
-        "user_authenticated": user_authenticated,
-        "type": types,
-    }
-    return render(request,'OmniCart/info/moneyback.html',context)
-
-def contact_us(request):
-    
-    user_authenticated, types = authentication_login(request)
-    context = {
-        "user_authenticated": user_authenticated,
-        "type": types,
-        "current_page_url": request.path,
-    }
-
-    return render(request, "OmniCart/info/contactus.html", context)
-
-def faq(request):
-
-    user_authenticated, types = authentication_login(request)
-
-    context = {
-        "user_authenticated": user_authenticated,
-        "type": types,
-        "current_page_url": request.path,
-    }
-
-    return render(request, "OmniCart/info/faq.html", context)
-
-def help(request):
-
-    user_authenticated, types = authentication_login(request)
-
-    context = {
-        "user_authenticated": user_authenticated,
-        "type": types,
-        "current_page_url": request.path,
-    }
-
-    return render(request, "OmniCart/info/help.html", context)
-
-def terms_and_condition(request):
-
-    user_authenticated, types = authentication_login(request)
-
-    context = {
-        "user_authenticated": user_authenticated,
-        "type": types,
-        "current_page_url": request.path,
-    }
-
-    return render(request, "OmniCart/info/termsandcondition.html", context)
