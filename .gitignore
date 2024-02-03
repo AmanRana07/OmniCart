@@ -1,0 +1,10 @@
+db.sqlite3
+
+OmniApp/__pycache__/
+OmniApp/migrations/__pycache__/
+
+OmniCart/__pycache__/
+
+product_images/
+category_images/
+
