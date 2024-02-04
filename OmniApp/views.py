@@ -245,21 +245,19 @@ def add_product(request):
         if customer_session:
             if form.is_valid():
                 product = form.save(commit=False)
-
-                # Retrieve the logged-in customer (manufacturer)
                 customer_id = customer_session.get("id")
                 customer = Customer.objects.get(
                     id=customer_id, user_type="manufacturer"
                 )
-
-                # Set the manufacturer to the currently logged-in user
                 product.manufacturer_id = customer
                 product.save()
-
+                form.save_m2m()  # Save many-to-many fields
                 messages.success(request, "Product added successfully!")
                 return redirect("add_product")
             else:
                 error_message = "There was an error. Please check the form."
+        else:
+            error_message = "Please log in as a manufacturer."
     else:
         form = ProductForm()
         error_message = None
@@ -704,51 +702,18 @@ def search_view(request):
     return render(request, "OmniCart/product/search_results.html", context)
 
 
-def pymntmethods(request):
-    
+@login_required(login_url="login")
+def my_account(request):
     user_authenticated, types = authentication_login(request)
+    customer = get_object_or_404(User, id=request.user.id)
+    customers = Customer.objects.get(email=customer.email)
+
+    # Filter orders based on status (assuming pending status is "pending")
+    pending_orders = Order.objects.filter(user=request.user, status="pending")
+
     context = {
         "user_authenticated": user_authenticated,
-        "type": types,
+        "customer": customers,
+        "pending_orders": pending_orders,
     }
-    return render(request,'OmniCart/info/pymntmethods.html',context)
-
-
-def privacy(request):
-    
-    user_authenticated, types = authentication_login(request)
-    context = {
-        "user_authenticated": user_authenticated,
-        "type": types,
-    }
-    return render(request,'OmniCart/info/privacy.html',context)
-
-
-def returns(request):
-    
-    user_authenticated, types = authentication_login(request)
-    context = {
-        "user_authenticated": user_authenticated,
-        "type": types,
-    }
-    return render(request,'OmniCart/info/returns.html',context)
-
-
-def shipping(request):
-    
-    user_authenticated, types = authentication_login(request)
-    context = {
-        "user_authenticated": user_authenticated,
-        "type": types,
-    }
-    return render(request,'OmniCart/info/shipping.html',context)
-
-
-def moneyback(request):
-    
-    user_authenticated, types = authentication_login(request)
-    context = {
-        "user_authenticated": user_authenticated,
-        "type": types,
-    }
-    return render(request,'OmniCart/info/moneyback.html',context)
+    return render(request, "OmniCart/Authintication/my-account.html", context)
