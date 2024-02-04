@@ -718,6 +718,16 @@ def my_account(request):
     }
     return render(request, "OmniCart/Authintication/my-account.html", context)
 
+
+def shipping(request):
+    
+    user_authenticated, types = authentication_login(request)
+    context = {
+        "user_authenticated": user_authenticated,
+        "type": types,
+    }
+    return render(request,'OmniCart/info/shipping.html',context)
+
 def privacy(request):
     
     user_authenticated, types = authentication_login(request)
@@ -726,3 +736,30 @@ def privacy(request):
         "type": types,
     }
     return render(request,'OmniCart/info/privacy.html',context)
+
+def pymntmethods(request):
+    
+    user_authenticated, types = authentication_login(request)
+    context = {
+        "user_authenticated": user_authenticated,
+        "type": types,
+    }
+    return render(request,'OmniCart/info/pymntmethods.html',context)
+
+def returns(request):
+    
+    user_authenticated, types = authentication_login(request)
+    context = {
+        "user_authenticated": user_authenticated,
+        "type": types,
+    }
+    return render(request,'OmniCart/info/returns.html',context)
+
+def moneyback(request):
+    
+    user_authenticated, types = authentication_login(request)
+    context = {
+        "user_authenticated": user_authenticated,
+        "type": types,
+    }
+    return render(request,'OmniCart/info/moneyback.html',context)

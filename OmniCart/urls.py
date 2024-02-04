@@ -58,8 +58,12 @@ urlpatterns = [
     path("get-tags/", get_tag, name="get_tag"),
     path("search/", search_view, name="search_view"),
     path("profile/", my_account, name="my_account"),
-    path('privacy-policy/', privacy, name="privacy"),
+    path("shipping-policy/", shipping, name="shipping"),
+    path("privacy-policy/", privacy, name="privacy"),
+    path("payment-methods/", pymntmethods, name="pymntmethods"),
+    path("returns-policy/", returns, name="returns"),
+    path("moneyback-policy/", moneyback, name="moneyback"),
 ]
-    
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
