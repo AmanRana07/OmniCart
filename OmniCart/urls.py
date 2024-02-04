@@ -58,6 +58,7 @@ urlpatterns = [
     path("get-tags/", get_tag, name="get_tag"),
     path("search/", search_view, name="search_view"),
     path("profile/", my_account, name="my_account"),
+    path('privacy-policy/', privacy, name="privacy"),
 ]
     
 if settings.DEBUG:
