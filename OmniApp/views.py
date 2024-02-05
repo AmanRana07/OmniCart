@@ -763,3 +763,63 @@ def moneyback(request):
         "type": types,
     }
     return render(request,'OmniCart/info/moneyback.html',context)
+
+def about_us(request):
+
+    user_authenticated, types = authentication_login(request)
+
+    context = {
+        "user_authenticated": user_authenticated,
+        "type": types,
+        "current_page_url": request.path,
+    }
+
+    return render(request, "OmniCart/info/aboutus.html", context)
+
+def contact_us(request):
+
+    user_authenticated, types = authentication_login(request)
+
+    context = {
+        "user_authenticated": user_authenticated,
+        "type": types,
+        "current_page_url": request.path,
+    }
+
+    return render(request, "OmniCart/info/contactus.html", context)
+
+def faq(request):
+
+    user_authenticated, types = authentication_login(request)
+
+    context = {
+        "user_authenticated": user_authenticated,
+        "type": types,
+        "current_page_url": request.path,
+    }
+
+    return render(request, "OmniCart/info/faq.html", context)
+
+def help(request):
+
+    user_authenticated, types = authentication_login(request)
+
+    context = {
+        "user_authenticated": user_authenticated,
+        "type": types,
+        "current_page_url": request.path,
+    }
+
+    return render(request, "OmniCart/info/help.html", context)
+
+def terms_and_condition(request):
+
+    user_authenticated, types = authentication_login(request)
+
+    context = {
+        "user_authenticated": user_authenticated,
+        "type": types,
+        "current_page_url": request.path,
+    }
+
+    return render(request, "OmniCart/info/termsandcondition.html", context)

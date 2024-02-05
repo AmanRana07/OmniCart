@@ -63,6 +63,11 @@ urlpatterns = [
     path("payment-methods/", pymntmethods, name="pymntmethods"),
     path("returns-policy/", returns, name="returns"),
     path("moneyback-policy/", moneyback, name="moneyback"),
+    path("aboutus/",about_us,name='about_us'),
+    path("contactus/",contact_us,name='contact_us'),
+    path("faq/",faq,name='faq'),
+    path("help/",help,name='help'),
+    path("termsandconditions/",terms_and_condition,name='terms_and_conditions'),
 ]
 
 if settings.DEBUG:
