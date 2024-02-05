@@ -49,11 +49,11 @@ Contributions are welcome! If you'd like to contribute to this project, please f
 - etc.
 
 ## For Running the website pip install this
-pip install django -adminlite3
-python manage.py collectstatic
+pip install django -adminlite3            
+python manage.py collectstatic        
 
 ## admin login panel  http://127.0.0.1:8000/admin/
-username - AmanRana
-password - AmanRana82043
+username - AmanRana   
+password - AmanRana82043   
 
 
