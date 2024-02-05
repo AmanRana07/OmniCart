@@ -1228,7 +1228,7 @@ Version:1.0
 }
 .hero-slider .single-slider {
 	height: auto;
-	background-image: url('https://via.placeholder.com/1900x700');
+	background-image: url("/static/homepage-images/MAINF.jpeg");
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
@@ -1551,8 +1551,8 @@ Version:1.0
 	position:relative;
 }
 .small-banner .single-banner img{
-	height:100%;
-	width:100%;
+	height:370px;
+	width:670px;
 	-webkit-transition:all 0.4s ease;
 	-moz-transition:all 0.4s ease;
 	transition:all 0.4s ease;
