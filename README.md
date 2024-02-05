@@ -37,7 +37,7 @@ Contributions are welcome! If you'd like to contribute to this project, please f
 5. Push to the branch (`git push origin feature/add-new-feature`).
 6. Create a new Pull Request.
 
-## Authors
+## Group Members
 
 - AMAN RANA(23122105) - (https://github.com/AmanRana07)
 - DEBOLINA CHATTERJEE(23122112) - (https://github.com/debolinaoli)
