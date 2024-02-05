@@ -1,10 +1,4 @@
-/* =====================================
-Template Name: Eshop
-Author Name: Naimur Rahman
-Author URI: http://www.wpthemesgrid.com/
-Description: Eshop - eCommerce HTML5 Template.
-Version:1.0
-========================================*/
+
 /*=======================================
 [Start Activation Code]
 =========================================
@@ -389,6 +383,71 @@ Version:1.0
 	}, 2000); //Here you can change preloader time
 	 
 	
+/*=====================================
+	  Category JS
+	======================================*/ 	
+
+	
+		// Make AJAX request to fetch categories
+		$.ajax({
+			url: '/get-categories/',  // URL to your Django view for fetching categories
+			type: 'GET',
+			success: function(response) {
+				// Handle success response
+				var categories = response;
+				console.log('Categories:', categories);
+				
+				// Clear existing options
+				$('.nice-select ul.list').empty();
+				
+				// Update the dropdown list with fetched categories
+				categories.forEach(function(category) {
+					console.log('Category:', category);
+					var listItem = $('<li>').attr('data-value', category.id).addClass('option');
+					var categoryLink = $('<a>').attr('href', '/category/' + category.id + '/').text(category.name);
+					categoryLink.appendTo(listItem);
+					listItem.appendTo('.nice-select ul.list');
+				});
+			},
+			error: function(xhr, status, error) {
+				// Handle error response
+				console.error('Error fetching categories:', error);
+			}
+		});
+
+	
+
+		/*=====================================
+	  Tags JS
+	======================================*/ 	
+
+
+	$.ajax({
+		url: '/get-tags/',  
+		type: 'GET',
+		success: function(response) {
+			
+			var tags = response; 
+			
+			console.log('Tags:', tags);
+			// Clear existing options
+			$('.all-category ul.main-category').empty();
+			// Update the list with fetched tags
+			tags.forEach(function(tag) {
+				console.log('Tag:', tag.name); // Debugging: Check tag
+				var listItem = $('<li>');
+				var tagLink = $('<a>').attr('href', '/tags/' + tag.id + '/').text(tag.name);
+				tagLink.appendTo(listItem);
+				listItem.appendTo('.all-category ul.main-category');
+			});
+		},
+		error: function(xhr, status, error) {
+			// Handle error response
+			console.error('Error fetching tags:', error);
+		}
+	});
+
+
 
 	const toggles = document.querySelectorAll('.faq-toggle')
 

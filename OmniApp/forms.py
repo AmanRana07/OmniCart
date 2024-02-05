@@ -17,7 +17,7 @@ class CustomerCreationForm(UserCreationForm):
         widgets = {
             "email": forms.EmailInput(attrs={"class": "form-control"}),
             "username": forms.TextInput(attrs={"class": "form-control"}),
-            "user_type": forms.Select(attrs={"class": "form-select"}),
+            "user_type": forms.Select(attrs={"class": "form-control"}),
             "full_name": forms.TextInput(attrs={"class": "form-control"}),
             "address": forms.Textarea(attrs={"class": "form-control"}),
             "phone_number": forms.TextInput(attrs={"class": "form-control"}),
@@ -56,6 +56,8 @@ class ProductForm(forms.ModelForm):
             "product_description",
             "product_short_description",
             "unit_price",
+            "categories",
+            "tags",
         ]
         widgets = {
             "product_name": forms.TextInput(attrs={"class": "form-control"}),
@@ -67,6 +69,8 @@ class ProductForm(forms.ModelForm):
                 attrs={"class": "form-control", "required": False}
             ),
             "unit_price": forms.NumberInput(attrs={"class": "form-control"}),
+            "categories": forms.SelectMultiple(attrs={"class": "form-control"}),
+            "tags": forms.SelectMultiple(attrs={"class": "form-control"}),
         }
 
 
@@ -81,6 +85,8 @@ class ProductEditrm(forms.ModelForm):
             "product_description",
             "product_short_description",
             "unit_price",
+            "categories",
+            "tags",
         ]
         widgets = {
             "product_name": forms.TextInput(
@@ -104,4 +110,6 @@ class ProductEditrm(forms.ModelForm):
             "unit_price": forms.NumberInput(
                 attrs={"class": "form-control", "required": False}
             ),
+            "categories": forms.SelectMultiple(attrs={"class": "form-control"}),
+            "tags": forms.SelectMultiple(attrs={"class": "form-control"}),
         }
