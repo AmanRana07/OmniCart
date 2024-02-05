@@ -14,10 +14,9 @@ This project is an ecommerce website built using Django, a high-level Python web
 ## Key Components
 
 - **Tags**: Products are categorized using tags for easy navigation.
-- **Trending Items**: Highlighting products that are currently trending.
+- **Category**: included category  in  product.
 - **Hot Items**: Showcasing products with high demand or popularity.
-- **Top Views**: Displaying products with the most views.
-- **Recent Sale Items**: Featuring recently sold products to encourage purchases.
+
 
 ## Installation
 
@@ -49,6 +48,8 @@ Contributions are welcome! If you'd like to contribute to this project, please f
 - Inspiration
 - etc.
 
-
+## For Running the website pip install this
 pip install django -adminlite3
 python manage.py collectstatic
+
+
