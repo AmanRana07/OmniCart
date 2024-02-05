@@ -5,76 +5,53 @@
 {% block content %}
 
 
-<style>
+    <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f2f2f2;
+            line-height: 1.6;
+            margin: 20px;
         }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            animation: fadeIn 1s ease-in-out;
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-        .question {
-            margin-bottom: 20px;
-            padding: 10px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-            animation: slideIn 1s ease-in-out;
-        }
-        @keyframes slideIn {
-            from {
-                transform: translateY(-20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        .question h2 {
-            margin: 0;
-            font-size: 20px;
+        h1 {
             color: #333;
         }
-        .answer {
-            margin-top: 10px;
-            padding-left: 20px;
-        }
-        .answer p {
-            margin: 0;
+        p {
             color: #666;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="question">
-            <h2>How do I place an order?</h2>
-            <div class="answer">
-                <p>To place an order, browse our website, select the items you want, and proceed to checkout. Follow the prompts to enter your shipping and payment information.</p>
-            </div>
-        </div>
-        <div class="question">
-            <h2>What payment methods do you accept?</h2>
-            <div class="answer">
-                <p>We accept Visa, Mastercard, American Express, PayPal, and bank transfers.</p>
-            </div>
-        </div>
-        <!-- Add more questions and answers here -->
+    <h1>Help Page</h1>
+    <p>Welcome to our help page. Here you'll find answers to common questions and issues.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <ul>
+        <li><a href="#faq1">How do I create an account?</a></li>
+        <li><a href="#faq2">What payment methods do you accept?</a></li>
+        <li><a href="#faq3">How can I contact customer support?</a></li>
+    </ul>
+
+    <h2 id="faq1">How do I create an account?</h2>
+    <p>To create an account, click on the "Sign Up" button on the top right corner of the page and fill out the required information.</p>
+
+    <h2 id="faq2">What payment methods do you accept?</h2>
+    <p>We accept Visa, MasterCard, American Express, and PayPal.</p>
+
+    <h2 id="faq3">How can I contact customer support?</h2>
+    <p>You can contact our customer support team by emailing support@example.com or by calling 1-800-123-4567.</p>
+</body>
+
 {% endblock content %}
