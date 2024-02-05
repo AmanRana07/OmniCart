@@ -1,4 +1,4 @@
-# Django Ecommerce Website
+# OmniCart Ecommerce Website
 
 This project is an ecommerce website built using Django, a high-level Python web framework. It includes modules for home, product listings, contact us, blog, services, and shops.
 
@@ -7,8 +7,8 @@ This project is an ecommerce website built using Django, a high-level Python web
 - **Home**: Landing page showcasing featured products, trending items, and other promotional content.
 - **Product**: Product listings with detailed information, including images, descriptions, and pricing.
 - **Contact Us**: Page for users to get in touch with the site administrators.
-- **Blog**: Section for publishing articles, news, and updates related to the ecommerce industry.
-- **Services**: Information about additional services offered by the website.
+- **Cart**: user can add item in a cart
+- **Order**: user can order the product
 - **Shops**: Listing of physical stores associated with the ecommerce platform.
 
 ## Key Components
@@ -48,3 +48,7 @@ Contributions are welcome! If you'd like to contribute to this project, please f
 - Hat tip to anyone whose code was used
 - Inspiration
 - etc.
+
+
+pip install django -adminlite3
+python manage.py collectstatic
