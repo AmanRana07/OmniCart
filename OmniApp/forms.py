@@ -11,6 +11,9 @@ class CustomerCreationForm(UserCreationForm):
             "username",
             "user_type",
             "full_name",
+            "company",
+            "country",
+            "postal_code",
             "address",
             "phone_number",
         )
@@ -19,6 +22,8 @@ class CustomerCreationForm(UserCreationForm):
             "username": forms.TextInput(attrs={"class": "form-control"}),
             "user_type": forms.Select(attrs={"class": "form-control"}),
             "full_name": forms.TextInput(attrs={"class": "form-control"}),
+            "country": forms.TextInput(attrs={"class": "form-control"}),
+            "postal_code": forms.TextInput(attrs={"class": "form-control"}),
             "address": forms.Textarea(attrs={"class": "form-control"}),
             "phone_number": forms.TextInput(attrs={"class": "form-control"}),
         }

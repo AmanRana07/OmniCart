@@ -45,7 +45,7 @@
             <div class="col-lg-2 col-md-2 col-12">
                 <!-- Logo -->
                 <div class="logo">
-                    <a href="index.html"><img src="{% static 'homepage-images/OMNI.png' %}" alt="logo"></a>
+                    <a href="{% url 'index' %}"><img src="{% static 'homepage-images/OMNI.png' %}" alt="logo"></a>
                 </div>
                 <!--/ End Logo -->
                 <!-- Search Form -->
@@ -150,20 +150,19 @@
                                     <ul class="nav main-menu menu navbar-nav">
                                         <li  class="{% if current_page_url == '/' %}active{% endif %}"><a href="{% url 'index' %}">Home</a></li>
                                             <li  class="{% if current_page_url == '/shops/' %}active{% endif %}"><a href="{% url 'shops' %}">Product</a></li>												
-                                            <li><a href="#">Service</a></li>
+                                           
                                             <li class="" ><a href="#">Shop<i class="ti-angle-down"></i><span class="new">New</span></a>
                                                 <ul class="dropdown">
                                                     <li><a href="cart.html">Cart</a></li>
                                                     <li><a href="checkout.html">Checkout</a></li>
                                                 </ul>
                                             </li>
-                                            <li><a href="#">Pages</a></li>									
-                                            <li><a href="#">Blog<i class="ti-angle-down"></i></a>
+                                           
                                                 <ul class="dropdown">
-                                                    <li><a href="blog-single-sidebar.html">Blog Single Sidebar</a></li>
+                                                    <li><a href="{% url 'about_us' %}">About Us</a></li>
                                                 </ul>
                                             </li>
-                                            <li><a href="contact.html">Contact Us</a></li>
+                                            <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
                                         </ul>
                                 </div>
                             </div>

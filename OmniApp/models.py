@@ -34,6 +34,12 @@ class Customer(AbstractBaseUser):
     email = models.EmailField(unique=True)
     user_type = models.CharField(max_length=15, choices=USER_TYPE_CHOICES)
     full_name = models.CharField(max_length=255)
+    company = models.CharField(max_length=255, null=True, blank=True)
+    company_logo_image = models.ImageField(
+        upload_to="logo_images/", null=True, blank=True
+    )
+    country = models.CharField(max_length=255, null=True, blank=True)
+    postal_code = models.CharField(max_length=20, blank=True, null=True) 
     address = models.TextField(blank=True, null=True)
     phone_number = models.CharField(max_length=20, blank=True, null=True)
     registration_date = models.DateTimeField(auto_now_add=True)

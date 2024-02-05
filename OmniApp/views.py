@@ -19,6 +19,7 @@ from django.utils.timezone import datetime
 from django.db.models import Sum
 from django.db.models.functions import TruncMonth
 import json
+from django.http import HttpResponse
 
 
 def authentication_login(request):
@@ -228,6 +229,7 @@ class AdminPanelView(View):
                     "shipped_count": shipped_count,
                     "delivered_count": delivered_count,
                     "total_sales_data": total_sales_data_json,  # Pass as JSON
+                    # "logo": customers.company_logo_image.url,
                 },
             )
         except Customer.DoesNotExist:
@@ -242,6 +244,7 @@ def add_product(request):
     if request.method == "POST":
         form = ProductForm(request.POST, request.FILES)
         customer_session = request.session.get("customer")
+        logo = ""
         if customer_session:
             if form.is_valid():
                 product = form.save(commit=False)
@@ -265,7 +268,11 @@ def add_product(request):
     return render(
         request,
         "OmniCart/admin/add_product.html",
-        {"form": form, "error_message": error_message},
+        {
+            "form": form,
+            "error_message": error_message,
+            # "logo": customer.company_logo_image.url,
+        },
     )
 
 
@@ -720,49 +727,54 @@ def my_account(request):
 
 
 def shipping(request):
-    
+
     user_authenticated, types = authentication_login(request)
     context = {
         "user_authenticated": user_authenticated,
         "type": types,
     }
-    return render(request,'OmniCart/info/shipping.html',context)
+    return render(request, "OmniCart/info/shipping.html", context)
+
 
 def privacy(request):
-    
+
     user_authenticated, types = authentication_login(request)
     context = {
         "user_authenticated": user_authenticated,
         "type": types,
     }
-    return render(request,'OmniCart/info/privacy.html',context)
+    return render(request, "OmniCart/info/privacy.html", context)
+
 
 def pymntmethods(request):
-    
+
     user_authenticated, types = authentication_login(request)
     context = {
         "user_authenticated": user_authenticated,
         "type": types,
     }
-    return render(request,'OmniCart/info/pymntmethods.html',context)
+    return render(request, "OmniCart/info/pymntmethods.html", context)
+
 
 def returns(request):
-    
+
     user_authenticated, types = authentication_login(request)
     context = {
         "user_authenticated": user_authenticated,
         "type": types,
     }
-    return render(request,'OmniCart/info/returns.html',context)
+    return render(request, "OmniCart/info/returns.html", context)
+
 
 def moneyback(request):
-    
+
     user_authenticated, types = authentication_login(request)
     context = {
         "user_authenticated": user_authenticated,
         "type": types,
     }
-    return render(request,'OmniCart/info/moneyback.html',context)
+    return render(request, "OmniCart/info/moneyback.html", context)
+
 
 def about_us(request):
 
@@ -776,6 +788,7 @@ def about_us(request):
 
     return render(request, "OmniCart/info/aboutus.html", context)
 
+
 def contact_us(request):
 
     user_authenticated, types = authentication_login(request)
@@ -787,6 +800,7 @@ def contact_us(request):
     }
 
     return render(request, "OmniCart/info/contactus.html", context)
+
 
 def faq(request):
 
@@ -800,6 +814,7 @@ def faq(request):
 
     return render(request, "OmniCart/info/faq.html", context)
 
+
 def help(request):
 
     user_authenticated, types = authentication_login(request)
@@ -812,6 +827,7 @@ def help(request):
 
     return render(request, "OmniCart/info/help.html", context)
 
+
 def terms_and_condition(request):
 
     user_authenticated, types = authentication_login(request)
@@ -823,3 +839,83 @@ def terms_and_condition(request):
     }
 
     return render(request, "OmniCart/info/termsandcondition.html", context)
+
+
+@login_required(login_url="login")
+def update_customer_info(request):
+    if request.method == "POST":
+        customer_id = request.POST.get(
+            "customer_id"
+        )  # Assuming you have a hidden input field in your form containing the customer ID
+        customer = Customer.objects.get(id=customer_id)  # Get the Customer instance
+        # Update the customer fields with the form data
+        customer.full_name = request.POST.get("full_name")
+        customer.address = request.POST.get("address")
+        customer.country = request.POST.get("country")
+        customer.postal_code = request.POST.get("postal_code")
+        customer.phone_number = request.POST.get("phone_number")
+        customer.company = request.POST.get("company")
+        # Save the updated customer instance
+        customer.save()
+        return redirect(
+            "my_account"
+        )  # Redirect to the profile page after saving changes
+    else:
+        return redirect("my_account")
+
+
+@login_required(login_url="login")
+def admin_account(request):
+    user_authenticated, types = authentication_login(request)
+    customer = get_object_or_404(User, id=request.user.id)
+    customers = Customer.objects.get(email=customer.email)
+    pending_orders = Order.objects.filter(user=request.user, status="pending")
+
+    # Filter orders based on status (assuming pending status is "pending")
+
+    context = {
+        "user_authenticated": user_authenticated,
+        "customer": customers,
+        "pending_orders": pending_orders,
+    }
+    return render(request, "OmniCart/admin/admin-account.html", context)
+
+
+def update_admin_customer_info(request):
+    if request.method == "POST":
+        # Retrieve form data
+        full_name = request.POST.get("full_name")
+        address = request.POST.get("address")
+        country = request.POST.get("country")
+        postal_code = request.POST.get("postal_code")
+        phone_number = request.POST.get("phone_number")
+        company = request.POST.get("company")
+
+        # Get the uploaded company logo file
+        company_logo = request.FILES.get("company_logo")
+
+        # Retrieve the admin customer object using the customer_id
+        customer_id = request.POST.get("customer_id")
+        admin_customer = Customer.objects.get(id=customer_id)
+
+        # Update the admin customer object with the new data
+        admin_customer.full_name = full_name
+        admin_customer.address = address
+        admin_customer.country = country
+        admin_customer.postal_code = postal_code
+        admin_customer.phone_number = phone_number
+        admin_customer.company = company
+
+        # Check if a new company logo was uploaded
+        if company_logo:
+            admin_customer.company_logo_image = company_logo
+
+        # Save the changes
+        admin_customer.save()
+
+        # Redirect to the appropriate page
+        return redirect(
+            "admin_account"
+        )  # Change 'profile' to the name of your profile page URL pattern
+    else:
+        return redirect("index")
