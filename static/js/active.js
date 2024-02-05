@@ -390,6 +390,14 @@ Version:1.0
 	 
 	
 
+	const toggles = document.querySelectorAll('.faq-toggle')
+
+toggles.forEach(toggle => {
+    toggle.addEventListener('click', () => {
+        toggle.parentNode.classList.toggle('active')
+    })
+})
+
 })(jQuery);
 
 

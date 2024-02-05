@@ -5,47 +5,84 @@
 {% block content %}
 
 
-        <div class="about1">
-            Welcome to OMNICART where passion meets innovation in every product we offer. We're thrilled to have you here and excited to share our story with you.
-        </div>
-        <hr>
-        <div class="about2">
-            <h2>Discover Our Story</h2>
-            <br>
-            <br>
-            <p>At OMNICART, our journey is fueled by a passion for ordering goods. We embarked on a mission to reach orders to people. Through dedication and innovation, we've grown into a trusted destination for sers. Our team, comprised of AMAN,DEBOLINA,DEVIKA, are committed to delivering unique selling proposition. With a focus on  we strive to exceed expectations and enrich the lives of our customers. We're proud recipients of and actively contribute to. But our greatest achievements are the smiles of satisfaction from our valued customers. Explore our collection of and experience. Join us on this exciting journey, where every purchase supports our vision. Let's create something extraordinary together.
-            </p>
-        </div>
-        <h1 class="team">DAD TEAM</h1>
+    <!-- ===================== -->
+    <!--    About Section      -->
+    <!-- ===================== -->
+  <!-- ===================== -->
+  <!--    P-Header Section   -->
+  <!-- ===================== -->
 
-        <div class="container-1">
-            <div class="flex-container">
-                <div class="flexbox1">
-                    <img id="pic" src="ceo.jpg" alt="Aman Singh">
-                    <h2 class="head1">Manager</h2>
-                    <p class="a">Aman Singh</p>
-                    <form action="https://www.linkedin.com/in/mpashutosh/">
-                        <button class="button"><span>Connect</span></button>
-                    </form>
-                </div>
-                <div class="flexbox1">
-                    <img id="pic" src="C:\Users\DEBOLINA\OneDrive\Desktop\omnicart\OmniCart\templates\OmniCart\product\WhatsApp Image 2024-01-31 at 1.58.37 PM.jpeg" alt="Debolina Chatterjee">
-                    <h2 class="head1">Captain</h2>
-                    <p class="a">Debolina Chatterjee</p>
-                    <form action="https://www.linkedin.com/in/debolina-chatterjee-614965268/">
-                        <button class="button"><span>Connect</span></button>
-                    </form>
-                </div>
-                <div class="flexbox1">
-                    <img id="pic" src="C:\Users\DEBOLINA\OneDrive\Desktop\omnicart\OmniCart\templates\OmniCart\product\WhatsApp Image 2024-01-31 at 1.59.05 PM.jpeg" alt="Harneet kaur">
-                    <h2 class="head1">Assistant Captain</h2>
-                    <p class="a">Devika.S.Vinod</p>
-                    <form action="https://www.linkedin.com/in/devika-s-vinod-58a629287/">
-                        <button class="button"><span>Connect</span></button>
-                    </form>
+  <section id="page-header" class="about-header" style="background-image: url({% static 'img/banner/b1.jpg' %});">
+    <h2>#KnowUs</h2>
+
+    <p> Lorem ipsum dolor sit amet, consectetur </p>
+  </section>
+
+    <section id="about-head" class="section-p1">
+        <img src="{% static 'img/about/a6.jpg' %}" alt="">
+        <div>
+          <h2>Who We Are?</h2>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
+            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris] nisi ut aliquip ex ea
+            commodo consequat. Duis auteirure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+            est laborum.</p>
+          <abbr tittle="">Create stunnig images with as much or as little control as you like thanks to a choice of basic
+            and creative modes.</abbr>
+          <br><br>
+          <marquee bgcolor="#ccc" loop="-1" scrollamount="5" width="100%">Create stunnig images with as much or as little
+            control as you like thanks to a choice of basic and creative modes.</marquee>
+        </div>
+      </section>
+
+      <section id="feature" class="section-p1">
+        <div class="fe-box">
+          <img src="{% static 'img/features/f1.png' %}" alt="">
+          <h6>Free Shipping</h6>
+        </div>
+        <div class="fe-box">
+          <img src="{% static 'img/features/f2.png' %}" alt="">
+          <h6>Online Order</h6>
+        </div>
+        <div class="fe-box">
+          <img src="{% static 'img/features/f3.png' %}" alt="">
+          <h6>Save Money</h6>
+        </div>
+        <div class="fe-box">
+          <img src="{% static 'img/features/f4.png' %}" alt="">
+          <h6>Promotions</h6>
+        </div>
+        <div class="fe-box">
+          <img src="{% static 'img/features/f5.png' %}" alt="">
+          <h6>xHappy Sell</h6>
+        </div>
+        <div class="fe-box">
+          <img src="{% static 'img/features/f6.png' %}" alt="">
+          <h6>F24/7 Support</h6>
+        </div>
+      </section>
+
+      <!-- Start Shop Newsletter  -->
+<section class="shop-newsletter section">
+    <div class="container">
+        <div class="inner-top">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2 col-12">
+                    <!-- Start Newsletter Inner -->
+                    <div class="inner">
+                        <h4>Newsletter</h4>
+                        <p> Subscribe to our newsletter and get <span>10%</span> off your first purchase</p>
+                        <form action="mail/mail.php" method="get" target="_blank" class="newsletter-inner">
+                            <input name="EMAIL" placeholder="Your email address" required="" type="email">
+                            <button class="btn">Subscribe</button>
+                        </form>
+                    </div>
+                    <!-- End Newsletter Inner -->
                 </div>
             </div>
         </div>
-        
+    </div>
+</section>
+<!-- End Shop Newsletter -->
         
 {% endblock content %}
