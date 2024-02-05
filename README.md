@@ -52,4 +52,8 @@ Contributions are welcome! If you'd like to contribute to this project, please f
 pip install django -adminlite3
 python manage.py collectstatic
 
+## admin login panel  http://127.0.0.1:8000/admin/
+username - AmanRana
+password - AmanRana82043
+
 
