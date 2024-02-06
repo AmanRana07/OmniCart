@@ -149,12 +149,18 @@
                                 <div class="nav-inner">	
                                     <ul class="nav main-menu menu navbar-nav">
                                         <li  class="{% if current_page_url == '/' %}active{% endif %}"><a href="{% url 'index' %}">Home</a></li>
-                                            <li  class="{% if current_page_url == '/shops/' %}active{% endif %}"><a href="{% url 'shops' %}">Product</a></li>												
+                                            <li  class="{% if current_page_url == '/shops/' %}active{% endif %}"><a href="{% url 'shops' %}">Shop</a></li>												
                                            
-                                            <li class="" ><a href="#">Shop<i class="ti-angle-down"></i><span class="new">New</span></a>
+                                            <li class="" ><a href="#">Policy<i class="ti-angle-down"></i><span class="new">New</span></a>
                                                 <ul class="dropdown">
-                                                    <li><a href="cart.html">Cart</a></li>
-                                                    <li><a href="checkout.html">Checkout</a></li>
+                                                    <li><a href="{% url 'faq' %}">faq</a></li>
+                                                    <li><a href="{% url 'faq' %}">Checkout</a></li>
+                                                    <li><a href="{% url 'terms_and_conditions' %}">Terms & Conditions</a></li>
+                                                    <li><a href="{% url 'pymntmethods'%}">Payment Methods</a></li>
+                        <li><a href="{% url 'moneyback'%}">Money-back</a></li>
+                        <li><a href="{% url 'returns' %}">Returns</a></li>
+                        <li><a href="{% url 'shipping' %}">Shipping</a></li>
+                        <li><a href="{% url 'privacy'%}">Privacy Policy</a></li>
                                                 </ul>
                                             </li>
                                            
