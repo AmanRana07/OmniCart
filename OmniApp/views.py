@@ -211,9 +211,12 @@ class AdminPanelView(View):
             total_sales_data = []
             for sale in sales_data:
                 month_labels.append(sale["month"].strftime("%B %Y"))
-                total_sales_data.append(float(sale["total_sales"]))  # Convert to float
+                total_sales = sale["total_sales"]
+                if total_sales is None:
+                    total_sales = 0.0  # Set default value if total_sales is None
+                total_sales_data.append(float(total_sales))  # Convert to float
 
-            total_sales_data_json = json.dumps(total_sales_data)  # Convert to JSON
+            total_sales_data_json = json.dumps(total_sales_data)
 
             return render(
                 request,
