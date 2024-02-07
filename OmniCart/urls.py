@@ -75,6 +75,7 @@ urlpatterns = [
         update_admin_customer_info,
         name="update_admin_customer_info",
     ),
+    path("product/<uuid:product_id>/add_review/", add_review, name="add_review"),
 ]
 
 if settings.DEBUG:

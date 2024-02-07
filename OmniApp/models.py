@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 import uuid
 from django.contrib.auth.models import User
 from decimal import Decimal
+from django.utils import timezone
 
 
 class CustomUserManager(BaseUserManager):
@@ -39,7 +40,7 @@ class Customer(AbstractBaseUser):
         upload_to="logo_images/", null=True, blank=True
     )
     country = models.CharField(max_length=255, null=True, blank=True)
-    postal_code = models.CharField(max_length=20, blank=True, null=True) 
+    postal_code = models.CharField(max_length=20, blank=True, null=True)
     address = models.TextField(blank=True, null=True)
     phone_number = models.CharField(max_length=20, blank=True, null=True)
     registration_date = models.DateTimeField(auto_now_add=True)
@@ -68,7 +69,6 @@ class Customer(AbstractBaseUser):
             return None
 
 
-
 class Categoryies(models.Model):
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to="category_images/")
@@ -76,6 +76,7 @@ class Categoryies(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -101,8 +102,8 @@ class Product(models.Model):
     product_description = models.TextField()
     unit_price = models.DecimalField(max_digits=10, decimal_places=2)
     product_short_description = models.TextField(default=" ")
-    categories = models.ManyToManyField(Categoryies, related_name='products')
-    tags = models.ManyToManyField(Tag, related_name='products')
+    categories = models.ManyToManyField(Categoryies, related_name="products")
+    tags = models.ManyToManyField(Tag, related_name="products")
 
     def __str__(self):
         return self.product_name
@@ -191,3 +192,20 @@ class OrderItem(models.Model):
         )
 
 
+class Review(models.Model):
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="reviews"
+    )
+    reviewer = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = (
+        models.IntegerField()
+    )  # You can customize this field based on your rating system
+    comment = models.TextField()
+    created_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        verbose_name = "Review"
+        verbose_name_plural = "Reviews"
+
+    def __str__(self):
+        return f"Review for {self.product.product_name} by {self.reviewer.username}"

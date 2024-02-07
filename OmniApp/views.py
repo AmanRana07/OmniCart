@@ -20,6 +20,12 @@ from django.db.models import Sum
 from django.db.models.functions import TruncMonth
 import json
 from django.http import HttpResponse
+from django.template.defaulttags import register
+
+
+@register.filter
+def get_range(value):
+    return range(value)
 
 
 def authentication_login(request):
@@ -475,6 +481,9 @@ def product_detail(request, product_id):
     cart_item, item_created = CartItem.objects.get_or_create(cart=cart, product=product)
 
     user_authenticated, types = authentication_login(request)
+    from django.template.defaulttags import register
+
+    register.filter("get_range", get_range)
 
     context = {
         "product": product,
@@ -924,3 +933,25 @@ def update_admin_customer_info(request):
         )  # Change 'profile' to the name of your profile page URL pattern
     else:
         return redirect("index")
+
+
+@login_required
+def add_review(request, product_id):
+    if request.method == "POST":
+        product = Product.objects.get(pk=product_id)
+        reviewer = request.user
+        rating = request.POST.get("rating")
+        comment = request.POST.get("comment")
+
+        if rating and comment:
+            # Create the review
+            Review.objects.create(
+                product=product, reviewer=reviewer, rating=rating, comment=comment
+            )
+            messages.success(request, "Your review has been submitted successfully.")
+        else:
+            messages.error(
+                request, "Please provide both rating and comment for the review."
+            )
+
+    return redirect("product_detail", product_id=product_id)
