@@ -469,6 +469,7 @@ def shops(request):
 def product_detail(request, product_id):
     # Retrieve the product details based on the product_id
     product = get_object_or_404(Product, product_id=product_id)
+    manufacturer = product.manufacturer_id
     user = request.user
     cart, created = Cart.objects.get_or_create(user=user)
     cart_item, item_created = CartItem.objects.get_or_create(cart=cart, product=product)
@@ -479,6 +480,7 @@ def product_detail(request, product_id):
         "product": product,
         "cart": cart,
         "item": cart_item,
+        "manufacturer": manufacturer,
         "user_authenticated": user_authenticated,
         "type": types,
     }
